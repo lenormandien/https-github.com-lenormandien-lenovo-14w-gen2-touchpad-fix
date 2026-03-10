@@ -45,6 +45,40 @@ Si `ELAN0643` apparaît dans les résultats, le touchpad est actif. 🎉
 
 Voir [docs/explications-techniques.md](docs/explications-techniques.md) pour une explication complète du correctif.
 
+## Problèmes connus
+
+### Secure Boot
+Le correctif ACPI ne fonctionne pas si le **Secure Boot** est activé. Pense à le désactiver dans le BIOS avant d'appliquer le correctif.
+
+### Touchpad inactif après une mise en veille
+Après un réveil de veille, le touchpad peut cesser de fonctionner. Pour le réactiver manuellement :
+
+```bash
+rmmod i2c_hid_acpi && modprobe i2c_hid_acpi
+```
+
+Pour automatiser ça à chaque réveil, crée le fichier `/etc/systemd/system/fix-touchpad-resume.service` :
+
+```ini
+[Unit]
+Description=Réactive le touchpad ELAN0643 après la veille
+After=suspend.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'rmmod i2c_hid_acpi && modprobe i2c_hid_acpi'
+
+[Install]
+WantedBy=suspend.target
+```
+
+Puis active-le :
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable fix-touchpad-resume.service
+```
+
 ## Compatibilité
 
 | Distro | Statut |
