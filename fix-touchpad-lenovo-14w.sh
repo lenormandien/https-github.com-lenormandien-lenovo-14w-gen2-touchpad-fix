@@ -1,12 +1,12 @@
 #!/bin/bash
 # =============================================================================
 # Installation du DSDT corrigé pour ELAN0643 — Lenovo 14w Gen 2
-# Télécharge le DSDT pré-corrigé depuis GitHub et l'installe.
+# Utilise le dépôt GitHub local déjà cloné pour installer le DSDT pré-corrigé.
 # =============================================================================
 
 set -euo pipefail
 
-# --- Couleurs ---
+# --- Couleurs pour les messages ---
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
@@ -23,10 +23,10 @@ if [ "$EUID" -ne 0 ]; then
     error "Exécute ce script en root : sudo bash $0"
 fi
 
-# --- Installation des outils nécessaires ---
+# --- Vérification des outils nécessaires ---
 info "Vérification des outils..."
 MISSING=()
-for tool in git wget iasl cpio update-grub; do
+for tool in iasl cpio update-grub; do
     if ! command -v "$tool" &> /dev/null; then
         MISSING+=("$tool")
     fi
@@ -35,20 +35,28 @@ done
 if [ ${#MISSING[@]} -gt 0 ]; then
     warning "Outils manquants : ${MISSING[*]}"
     info "Installation en cours..."
-    apt-get update && apt-get install -y git wget acpica-tools cpio || error "Échec de l'installation."
+    apt-get update && apt-get install -y acpica-tools cpio || error "Échec de l'installation des outils."
 fi
 success "Tous les outils sont disponibles."
 
-# --- Téléchargement du DSDT corrigé depuis GitHub ---
-GITHUB_URL="https://raw.githubusercontent.com/lenormandien/lenovo-14w-gen2-touchpad-fix/dsdt.dsl"
-WORKDIR=$(mktemp -d /tmp/acpi-fix-XXXXXX)
-cd "$WORKDIR"
+# --- Vérification du dépôt GitHub local ---
+REPO_DIR="lenovo-14w-gen2-touchpad-fix"
+DSDT_SRC="$REPO_DIR/dsdt.dsl"
 
-info "Téléchargement du DSDT corrigé depuis GitHub..."
-if ! wget -O dsdt.dsl "$GITHUB_URL"; then
-    error "Échec du téléchargement. Vérifie ta connexion Internet."
+if [ ! -d "$REPO_DIR" ]; then
+    error "Le dépôt '$REPO_DIR' n'existe pas. Clone-le d'abord avec :\n  git clone https://github.com/lenormandien/lenovo-14w-gen2-touchpad-fix.git"
 fi
-success "DSDT corrigé téléchargé : dsdt.dsl"
+
+if [ ! -f "$DSDT_SRC" ]; then
+    error "Fichier '$DSDT_SRC' introuvable. Vérifie le dépôt cloné."
+fi
+success "DSDT corrigé trouvé : $DSDT_SRC"
+
+# --- Copie du DSDT corrigé dans un répertoire temporaire ---
+WORKDIR=$(mktemp -d /tmp/acpi-fix-XXXXXX)
+cp "$DSDT_SRC" "$WORKDIR/dsdt.dsl"
+cd "$WORKDIR"
+success "DSDT copié dans $WORKDIR/dsdt.dsl"
 
 # --- Recompilation du DSDT ---
 info "Recompilation du DSDT..."
@@ -66,7 +74,7 @@ echo 'GRUB_EARLY_INITRD_LINUX_CUSTOM="initrd_acpi_patched"' > /etc/default/grub.
 if ! update-grub; then
     error "Échec de la mise à jour de GRUB."
 fi
-success "Tables ACPI installées."
+success "Tables ACPI installées avec succès."
 
 # --- Nettoyage ---
 cd /
