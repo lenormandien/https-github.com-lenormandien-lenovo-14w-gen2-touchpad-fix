@@ -1,7 +1,8 @@
 #!/bin/bash
 # =============================================================================
-# Correctif touchpad ELAN0643 — Lenovo 14w Gen 2
+# Correctif touchpad ELAN0643 — Lenovo 14w Gen 2 (version adaptée pour 82N9)
 # Source : https://github.com/lenormandien/lenovo-14w-gen2-touchpad-fix
+# Adapté pour les modèles Lenovo 14w Gen 2 (y compris 82N9) et Linux Mint 22.3.
 # =============================================================================
 
 set -euo pipefail  # Arrête le script si une commande échoue ou si une variable est non définie
@@ -24,13 +25,23 @@ error()   { echo -e "${RED}[ERREUR]${NC} $1"; exit 1; }
 
 echo ""
 echo -e "${BLUE}============================================================${NC}"
-echo -e "${BLUE}   Correctif touchpad ELAN0643 — Lenovo 14w Gen 2${NC}"
+echo -e "${BLUE}   Correctif touchpad ELAN0643 — Lenovo 14w Gen 2 (82N9)${NC}"
 echo -e "${BLUE}============================================================${NC}"
 echo ""
 
 # Vérifier qu'on est root
 if [ "$EUID" -ne 0 ]; then
     error "Ce script doit être exécuté en tant que root.\nRelance avec : sudo bash $0"
+fi
+
+# --- Vérification non bloquante de l'OS (Linux Mint 22.3) ---
+OS_INFO=$(lsb_release -d 2>/dev/null | grep -i "Description" | cut -d':' -f2 | sed 's/^[ \t]*//' || echo "inconnu")
+if [[ "$OS_INFO" != *"Linux Mint 22"* && "$OS_INFO" != *"Linux Mint 21"* ]]; then
+    warning "Ce script a été testé principalement sur Linux Mint 22.3.\nOS détecté : $OS_INFO"
+    read -rp "Continuer quand même ? (O/n) : " CONFIRM
+    [[ "$CONFIRM" =~ ^[nN]$ ]] && exit 0
+else
+    success "OS compatible détecté : $OS_INFO"
 fi
 
 # Vérifier les outils nécessaires
@@ -49,12 +60,24 @@ if [ ${#MISSING[@]} -gt 0 ]; then
 fi
 success "Tous les outils sont disponibles."
 
-# Vérifier qu'on est bien sur un Lenovo 14w Gen 2
+# Vérifier qu'on est bien sur un Lenovo 14w Gen 2 (y compris 82N9)
 PRODUCT=$(cat /sys/class/dmi/id/product_name 2>/dev/null || echo "inconnu")
-if [[ "$PRODUCT" != *"14w"* ]]; then
-    warning "Ce laptop ne semble pas être un Lenovo 14w (détecté : $PRODUCT)."
-    read -rp "Continuer quand même ? (o/N) : " CONFIRM
+LENOVO_14W_MODELS=("14w" "82N9" "82N9CTO" "14w Gen 2" "20XW" "20XWCTO")
+
+IS_LENOVO_14W=false
+for model in "${LENOVO_14W_MODELS[@]}"; do
+    if [[ "$PRODUCT" == *"$model"* ]]; then
+        IS_LENOVO_14W=true
+        break
+    fi
+done
+
+if [ "$IS_LENOVO_14W" = false ]; then
+    warning "Ce laptop ne semble pas être un Lenovo 14w Gen 2 (détecté : $PRODUCT)."
+    read -rp "Ce correctif est conçu pour les modèles Lenovo 14w Gen 2 (ex: 82N9).\nForcer l'exécution ? (o/N) : " CONFIRM
     [[ "$CONFIRM" =~ ^[oO]$ ]] || exit 0
+else
+    success "Modèle compatible détecté : $PRODUCT (Lenovo 14w Gen 2)."
 fi
 
 # Répertoire de travail temporaire
@@ -135,28 +158,47 @@ if old1 in content:
 else:
     print("  [ATTENTION] Correction 1 (_DSM) : motif non trouvé, peut-être déjà patché ?")
 
-# Correction 2 : _CRS — second If -> Else
-old2 = (
-    '                    Return (ConcatenateResTemplate (SBFB, SBFG))\n'
-    '                }\n'
-    '                If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x02))\n'
-    '                {\n'
-    '                    Name (SBFC'
+# Correction 2 : _CRS — Ajoute un Else si le second If pour TPTY==0x02 est absent
+# Cherche le premier If pour TPTY==0x01 et ajoute un Else après
+crs_pattern = re.compile(
+    r'If \(\(.*TPTY.*== 0x01\)\)\n'  # Ligne du If
+    r'\s*\{\n'                      # Ouverture du bloc
+    r'.*?'                          # Contenu du bloc (non-greedy)
+    r'Return \(ConcatenateResTemplate \(SBFB, SBFG\)\)\n'  # Ligne de retour
+    r'\s*\}\s*'                     # Fermeture du bloc
 )
-new2 = (
+
+# Remplace par le même bloc + un Else ajouté
+crs_replacement = (
+    'If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x01))\n'
+    '                {\n'
+    '                    Name (SBFB, ResourceTemplate ()\n'
+    '                    {\n'
+    '                        I2cSerialBusV2 (0x0015, ControllerInitiated, 0x00061A80,\n'
+    '                            AddressingMode7Bit, "\\_SB.I2CD",\n'
+    '                            0x00, ResourceConsumer, , Exclusive,\n'
+    '                            )\n'
+    '                    })\n'
     '                    Return (ConcatenateResTemplate (SBFB, SBFG))\n'
     '                }\n'
     '                Else\n'
-    '                // If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x02))\n'
     '                {\n'
-    '                    Name (SBFC'
+    '                    Name (SBFC, ResourceTemplate ()\n'
+    '                    {\n'
+    '                        I2cSerialBusV2 (0x002C, ControllerInitiated, 0x00061A80,\n'
+    '                            AddressingMode7Bit, "\\_SB.I2CD",\n'
+    '                            0x00, ResourceConsumer, , Exclusive,\n'
+    '                            )\n'
+    '                    })\n'
+    '                    Return (ConcatenateResTemplate (SBFC, SBFG))\n'
+    '                }'
 )
 
-if old2 in content:
-    content = content.replace(old2, new2, 1)
-    print("  [OK] Correction 2 (_CRS) appliquée.")
+if crs_pattern.search(content):
+    content = crs_pattern.sub(crs_replacement, content, 1)
+    print("  [OK] Correction 2 (_CRS) appliquée : Else ajouté pour TPTY==0x02.")
 else:
-    print("  [ATTENTION] Correction 2 (_CRS) : motif non trouvé, peut-être déjà patché ?")
+    print("  [ATTENTION] Correction 2 (_CRS) : motif non trouvé. Vérifie manuellement le DSDT.")
 
 with open(sys.argv[1], 'w') as f:
     f.write(content)
