@@ -1,0 +1,16 @@
+[Unit]
+Description=Activation touchpad ELAN0643 — Lenovo 14w Gen 2
+Documentation=https://github.com/lenormandien/lenovo-14w-gen2-touchpad-fix
+After=sysinit.target systemd-udevd.service
+Wants=sysinit.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/lib/elan0643-touchpad-init.sh
+StandardOutput=journal
+StandardError=journal
+TimeoutStartSec=60
+
+[Install]
+WantedBy=multi-user.target
