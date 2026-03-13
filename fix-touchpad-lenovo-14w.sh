@@ -4,7 +4,7 @@
 # Source : https://github.com/lenormandien/lenovo-14w-gen2-touchpad-fix
 # =============================================================================
 
-set -e  # Arrête le script si une commande échoue
+set -euo pipefail  # Arrête le script si une commande échoue ou si une variable est non définie
 
 # --- Couleurs pour les messages ---
 RED='\033[0;31m'
@@ -35,17 +35,17 @@ fi
 
 # Vérifier les outils nécessaires
 info "Vérification des outils nécessaires..."
-MISSING=""
+MISSING=()
 for tool in acpidump iasl cpio update-grub; do
     if ! command -v "$tool" &> /dev/null; then
-        MISSING="$MISSING $tool"
+        MISSING+=("$tool")
     fi
 done
 
-if [ -n "$MISSING" ]; then
-    warning "Outils manquants :$MISSING"
+if [ ${#MISSING[@]} -gt 0 ]; then
+    warning "Outils manquants : ${MISSING[*]}"
     info "Installation en cours..."
-    apt install -y acpica-tools acpidump cpio || error "Impossible d'installer les outils."
+    apt-get update && apt-get install -y acpica-tools acpidump cpio || error "Impossible d'installer les outils."
 fi
 success "Tous les outils sont disponibles."
 
@@ -60,7 +60,7 @@ fi
 # Répertoire de travail temporaire
 WORKDIR=$(mktemp -d /tmp/acpi-fix-XXXXXX)
 info "Répertoire de travail : $WORKDIR"
-cd "$WORKDIR"
+cd "$WORKDIR" || error "Impossible de se déplacer dans $WORKDIR"
 
 # =============================================================================
 # 1. Extraction et décompilation des tables ACPI
@@ -69,11 +69,11 @@ cd "$WORKDIR"
 echo ""
 info "Étape 1 — Extraction des tables ACPI..."
 mkdir -p acpi/dat acpi/dsl
-cd acpi/dat
-acpidump -b
-iasl -d *.dat 2>/dev/null
-mv *.dsl ../dsl
-cd "$WORKDIR"
+cd acpi/dat || error "Impossible de se déplacer dans acpi/dat"
+acpidump -b || error "Échec de l'extraction des tables ACPI."
+iasl -d *.dat 2>/dev/null || error "Échec de la décompilation des tables ACPI."
+mv *.dsl ../dsl 2>/dev/null
+cd "$WORKDIR" || error "Impossible de revenir dans $WORKDIR"
 success "Tables ACPI extraites et décompilées."
 
 DSDT="$WORKDIR/acpi/dsl/dsdt.dsl"
@@ -98,7 +98,7 @@ echo ""
 info "Étape 3 — Application du correctif sur le DSDT..."
 
 # Sauvegarde
-cp "$DSDT" "${DSDT}.bak"
+cp "$DSDT" "${DSDT}.bak" || error "Impossible de sauvegarder $DSDT"
 info "Sauvegarde créée : ${DSDT}.bak"
 
 # --- Correction 1 : méthode _DSM ---
@@ -170,15 +170,15 @@ success "Correctif appliqué sur le DSDT."
 
 echo ""
 info "Étape 4 — Recompilation du DSDT..."
-cp "$DSDT" "$WORKDIR/dsdt.dsl"
-cd "$WORKDIR"
+cp "$DSDT" "$WORKDIR/dsdt.dsl" || error "Impossible de copier $DSDT"
+cd "$WORKDIR" || error "Impossible de revenir dans $WORKDIR"
 iasl -sa dsdt.dsl 2>/dev/null || error "Erreur lors de la recompilation du DSDT. Vérifiez le fichier dsdt.dsl."
 success "DSDT recompilé avec succès."
 
 info "Création de l'archive initrd..."
 mkdir -p kernel/firmware/acpi
-cp dsdt.aml kernel/firmware/acpi/
-find kernel | cpio -H newc --create > /boot/initrd_acpi_patched
+cp dsdt.aml kernel/firmware/acpi/ || error "Impossible de copier dsdt.aml"
+find kernel | cpio -H newc --create > /boot/initrd_acpi_patched || error "Impossible de créer l'initrd."
 success "Archive /boot/initrd_acpi_patched créée."
 
 # =============================================================================
@@ -188,15 +188,15 @@ success "Archive /boot/initrd_acpi_patched créée."
 echo ""
 info "Étape 5 — Configuration de GRUB..."
 mkdir -p /etc/default/grub.d
-echo 'GRUB_EARLY_INITRD_LINUX_CUSTOM="initrd_acpi_patched"' > /etc/default/grub.d/acpi-tables.cfg
-update-grub
+echo 'GRUB_EARLY_INITRD_LINUX_CUSTOM="initrd_acpi_patched"' > /etc/default/grub.d/acpi-tables.cfg || error "Impossible d'écrire le fichier de configuration GRUB."
+update-grub || error "Impossible de mettre à jour GRUB."
 success "GRUB mis à jour."
 
 # =============================================================================
 # 6. Nettoyage
 # =============================================================================
 
-cd /
+cd / || error "Impossible de revenir à la racine."
 rm -rf "$WORKDIR"
 success "Fichiers temporaires supprimés."
 
