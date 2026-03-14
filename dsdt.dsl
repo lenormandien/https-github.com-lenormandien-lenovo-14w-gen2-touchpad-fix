@@ -7662,6 +7662,10 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         {
             Name (_HID, "ELAN0643")  // _HID: Hardware ID
             Name (_CID, "PNP0C50" /* HID Protocol Device (I2C bus) */)  // _CID: Compatible ID
+            Name (_DEP, Package (0x01)  // _DEP: Dependencies — Fix ELAN0643: forcer probe après GPIO
+            {
+                \_SB.GPIO
+            })
             ICMS = 0x0A
             DCMS = 0x01
             ICMS = 0x20
@@ -9599,4 +9603,3 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         PAR3,   32
     }
 }
-
