@@ -2,8 +2,6 @@
 
 > **Traduit, corrigé et enrichi** à partir du [Gist original de cg666](https://gist.github.com/cg666/6069eb9619ce2e1dc1664193a5540147).
 
-# Lenovo 14w Gen 2 — Fix complet du touchpad ELAN0643 sous Linux
-
 ![Linux](https://img.shields.io/badge/Linux-Compatible-success)
 ![GRUB](https://img.shields.io/badge/Boot-GRUB2-blue)
 ![ACPI](https://img.shields.io/badge/ACPI-Patched-orange)
