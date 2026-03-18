@@ -2,91 +2,109 @@
 
 > **Traduit, corrigé et enrichi** à partir du [Gist original de cg666](https://gist.github.com/cg666/6069eb9619ce2e1dc1664193a5540147).
 
-## Le problème
+# Lenovo 14w Gen 2 — Fix complet du touchpad ELAN0643 sous Linux
 
-Sur le laptop **Lenovo 14w Gen 2**, le touchpad (`ELAN0643`) ne fonctionne pas sous Linux. La cause est une erreur de logique dans la table **ACPI DSDT** fournie par le BIOS : Linux ne parvient pas à détecter le bon type de touchpad et abandonne l'initialisation.
+![Linux](https://img.shields.io/badge/Linux-Compatible-success)
+![GRUB](https://img.shields.io/badge/Boot-GRUB2-blue)
+![ACPI](https://img.shields.io/badge/ACPI-Patched-orange)
+![Systemd](https://img.shields.io/badge/Systemd-Service-green)
+![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
-## La solution
+---
 
-On corrige la table ACPI, puis on demande à Linux de l'utiliser à la place de celle du BIOS, via un `initrd` précoce chargé par GRUB.
+## Problème
 
-## Installation rapide
+Sur le **Lenovo 14w Gen 2**, le touchpad **ELAN0643** :
+
+- ❌ Non détecté
+- ❌ Inactif après boot
+- ❌ Instable après veille
+
+### Causes
+
+- Bug dans le **DSDT (ACPI)**
+- Contrôleur **I2C (AMDI0010:01)** bloqué en état **D3**
+
+---
+
+## Solution
+
+### 1. Patch ACPI (DSDT)
+
+- Correction `_DSM`
+- Correction `_CRS`
+- `_S0W` → force D0
+- `_PS3` → désactivé
+
+### 2. Service systemd
+
+Au boot :
+
+- Force le contrôleur en **D0**
+- Désactive l'autosuspend
+- Rebind du driver I2C
+- Déclenche le driver `elan_i2c`
+
+---
+
+## Installation
 
 ```bash
-sudo apt install git 
+sudo apt install git
 git clone https://github.com/lenormandien/lenovo-14w-gen2-touchpad-fix.git
 cd lenovo-14w-gen2-touchpad-fix
-sudo bash fix-touchpad-lenovo-14w.sh
-sudo sbin/reboot
+sudo bash install-dsdt-elan0643.sh
+reboot
 ```
 
-## Mise à jour
+## Vérification
 
 ```bash
-cd lenovo-14w-gen2-touchpad-fix
-git pull
-sudo bash fix-touchpad-lenovo-14w.sh
-```
-
-Le script doit être exécuté en **root** (ou avec `sudo`).
-
-
-## Vérification après redémarrage
-
-```bash
+systemctl status elan0643-touchpad.service
 dmesg | grep -i elan
-libinput list-devices
+libinput list-devices | grep -A 10 Touchpad
 ```
 
-Si `ELAN0643` apparaît dans les résultats, le touchpad est actif. 🎉
+---
 
-## Ce que fait le script
+## Fichiers installés
 
-1. Vérifie les outils nécessaires et les installe si besoin (`acpica-tools`, `acpidump`, `cpio`)
-2. Vérifie que le laptop est bien un Lenovo 14w Gen 2
-3. Extrait et décompile les tables ACPI du BIOS
-4. Patche le fichier `dsdt.dsl` (corrections `_DSM` et `_CRS`)
-5. Recompile le DSDT et crée l'archive `/boot/initrd_acpi_patched`
-6. Configure GRUB pour charger le correctif au démarrage
-7. Nettoie les fichiers temporaires
+- `/boot/initrd_acpi_patched`
+- `/etc/default/grub.d/acpi-tables.cfg`
+- `/usr/local/lib/elan0643-touchpad-init.sh`
+- `/etc/systemd/system/elan0643-touchpad.service`
 
-## Détails techniques
+---
 
-Voir [docs/explications-techniques.md](docs/explications-techniques.md) pour une explication complète du correctif.
+## Rollback
 
-## Problèmes connus
+```bash
+sudo systemctl disable elan0643-touchpad.service
+sudo rm /etc/systemd/system/elan0643-touchpad.service
+sudo rm /usr/local/lib/elan0643-touchpad-init.sh
+sudo rm /etc/default/grub.d/acpi-tables.cfg
+sudo update-grub
+reboot
+```
+
+---
+
+## Debug avancé
+
+```bash
+journalctl -u elan0643-touchpad.service
+dmesg | grep -i i2c
+```
+
+---
+
+## Limitations
 
 ### Secure Boot
-Le correctif ACPI ne fonctionne pas si le **Secure Boot** est activé. Pense à le désactiver dans le BIOS avant d'appliquer le correctif.
+❌ Non compatible → à désactiver dans le BIOS
 
-### Touchpad inactif après une mise en veille
-Après un réveil de veille, le touchpad peut cesser de fonctionner. Pour le réactiver manuellement :
+---
 
-```bash
-rmmod i2c_hid_acpi && modprobe i2c_hid_acpi
-```
-
-Pour automatiser ça à chaque réveil, crée le fichier `/etc/systemd/system/fix-touchpad-resume.service` :
-
-```ini
-[Unit]
-Description=Réactive le touchpad ELAN0643 après la veille
-After=suspend.target
-
-[Service]
-Type=oneshot
-ExecStart=/bin/sh -c 'rmmod i2c_hid_acpi && modprobe i2c_hid_acpi'
-
-[Install]
-WantedBy=suspend.target
-```
-
-Puis active-le :
-
-```bash
-sudo systemctl daemon-reload
-sudo systemctl enable fix-touchpad-resume.service
-```
 
 ## Compatibilité
 
