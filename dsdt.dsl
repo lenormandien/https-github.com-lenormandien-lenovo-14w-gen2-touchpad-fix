@@ -5,20 +5,20 @@
  * 
  * Disassembling to symbolic ASL+ operators
  *
- * Disassembly of dsdt.dat, Fri Mar 13 18:34:43 2026
+ * Disassembly of dsdt.aml, Wed Mar 18 12:15:26 2026
  *
  * Original Table Header:
  *     Signature        "DSDT"
- *     Length           0x00009B6F (39791)
+ *     Length           0x0000986A (39018)
  *     Revision         0x01 **** 32-bit table (V1), no 64-bit math support
- *     Checksum         0xB3
+ *     Checksum         0x4C
  *     OEM ID           "LENOVO"
  *     OEM Table ID     "AMD"
- *     OEM Revision     0x00001000 (4096)
+ *     OEM Revision     0x00001001 (4097)
  *     Compiler ID      "INTL"
- *     Compiler Version 0x20180313 (538444563)
+ *     Compiler Version 0x20250404 (539296772)
  */
-DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
+DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001001)
 {
     External (_PR_.C000, DeviceObj)
     External (_PR_.C000.PPCV, IntObj)
@@ -168,7 +168,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
     External (MWAK, MethodObj)    // 1 Arguments
     External (ODV0, IntObj)
 
-    OperationRegion (SYST, SystemMemory, 0xCE3ADF98, 0x00000001)
+    OperationRegion (SYST, SystemMemory, 0xCE3B5F98, One)
     Field (SYST, AnyAcc, Lock, Preserve)
     {
         RV2,    8
@@ -187,8 +187,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         Processor (C007, 0x07, 0x00000410, 0x06){}
     }
 
-    Name (TZFG, 0x00)
-    OperationRegion (DBG0, SystemIO, 0x80, 0x01)
+    Name (TZFG, Zero)
+    OperationRegion (DBG0, SystemIO, 0x80, One)
     Field (DBG0, ByteAcc, NoLock, Preserve)
     {
         IO80,   8
@@ -225,7 +225,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         VARR = Local0
     }
 
-    OperationRegion (P01, SystemIO, 0x0401, 0x01)
+    OperationRegion (P01, SystemIO, 0x0401, One)
     Field (P01, ByteAcc, NoLock, Preserve)
     {
         PST1,   8
@@ -260,7 +260,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         EMEE,   8
     }
 
-    OperationRegion (GNVS, SystemMemory, 0xCE4F9C98, 0x0000000B)
+    OperationRegion (GNVS, SystemMemory, 0xCE4F9C98, 0x0B)
     Field (GNVS, AnyAcc, NoLock, Preserve)
     {
         BRTL,   8, 
@@ -272,7 +272,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         WKPM,   8
     }
 
-    OperationRegion (OGNS, SystemMemory, 0xCE3ADE98, 0x00000008)
+    OperationRegion (OGNS, SystemMemory, 0xCE3B5E98, 0x08)
     Field (OGNS, AnyAcc, Lock, Preserve)
     {
         M2WL,   8, 
@@ -285,15 +285,15 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         RV2I,   8
     }
 
-    OperationRegion (PNVS, SystemMemory, 0xCE3ADF18, 0x00000002)
+    OperationRegion (PNVS, SystemMemory, 0xCE3B5F18, 0x02)
     Field (PNVS, AnyAcc, NoLock, Preserve)
     {
         HDSI,   8, 
         HDSO,   8
     }
 
-    Name (LINX, 0x00)
-    Name (OSSP, 0x00)
+    Name (LINX, Zero)
+    Name (OSSP, Zero)
     Name (OSTB, Ones)
     Name (TPOS, Zero)
     Method (OSTP, 0, NotSerialized)
@@ -302,8 +302,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         {
             If (CondRefOf (\_OSI, Local0))
             {
-                OSTB = 0x00
-                TPOS = 0x00
+                OSTB = Zero
+                TPOS = Zero
                 If (_OSI ("Windows 2001"))
                 {
                     OSTB = 0x08
@@ -342,42 +342,42 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
                 If (_OSI ("Windows 2006 SP1"))
                 {
-                    OSSP = 0x01
+                    OSSP = One
                     OSTB = 0x40
                     TPOS = 0x40
                 }
 
                 If (_OSI ("Windows 2009"))
                 {
-                    OSSP = 0x01
+                    OSSP = One
                     OSTB = 0x50
                     TPOS = 0x50
                 }
 
                 If (_OSI ("Windows 2012"))
                 {
-                    OSSP = 0x01
+                    OSSP = One
                     OSTB = 0x60
                     TPOS = 0x60
                 }
 
                 If (_OSI ("Windows 2013"))
                 {
-                    OSSP = 0x01
+                    OSSP = One
                     OSTB = 0x61
                     TPOS = 0x61
                 }
 
                 If (_OSI ("Windows 2015"))
                 {
-                    OSSP = 0x01
+                    OSSP = One
                     OSTB = 0x70
                     TPOS = 0x70
                 }
 
                 If (_OSI ("Linux"))
                 {
-                    LINX = 0x01
+                    LINX = One
                     OSTB = 0x80
                     TPOS = 0x80
                 }
@@ -386,8 +386,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             {
                 If (SEQL (_OS, "Microsoft Windows"))
                 {
-                    OSTB = 0x01
-                    TPOS = 0x01
+                    OSTB = One
+                    TPOS = One
                 }
                 ElseIf (SEQL (_OS, "Microsoft WindowsME: Millennium Edition"))
                 {
@@ -401,14 +401,14 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 }
                 Else
                 {
-                    OSTB = 0x00
-                    TPOS = 0x00
+                    OSTB = Zero
+                    TPOS = Zero
                 }
             }
             Else
             {
-                OSTB = 0x00
-                TPOS = 0x00
+                OSTB = Zero
+                TPOS = Zero
             }
 
             If ((TPOS == 0x80)){}
@@ -448,31 +448,31 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
     Name (_S0, Package (0x04)  // _S0_: S0 System State
     {
-        0x00, 
-        0x00, 
-        0x00, 
-        0x00
+        Zero, 
+        Zero, 
+        Zero, 
+        Zero
     })
     Name (_S3, Package (0x04)  // _S3_: S3 System State
     {
         0x03, 
         0x03, 
-        0x00, 
-        0x00
+        Zero, 
+        Zero
     })
     Name (_S4, Package (0x04)  // _S4_: S4 System State
     {
         0x04, 
         0x04, 
-        0x00, 
-        0x00
+        Zero, 
+        Zero
     })
     Name (_S5, Package (0x04)  // _S5_: S5 System State
     {
         0x05, 
         0x05, 
-        0x00, 
-        0x00
+        Zero, 
+        Zero
     })
     Method (_PTS, 1, NotSerialized)  // _PTS: Prepare To Sleep
     {
@@ -488,8 +488,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             \_SB.PCI0.SMB.RSTU = Zero
         }
 
-        \_SB.PCI0.SMB.CLPS = 0x01
-        \_SB.PCI0.SMB.SLPS = 0x01
+        \_SB.PCI0.SMB.CLPS = One
+        \_SB.PCI0.SMB.SLPS = One
         \_SB.PCI0.SMB.PEWS = \_SB.PCI0.SMB.PEWS
         \_SB.APTS (Arg0)
     }
@@ -502,7 +502,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         }
 
         \_SB.PCI0.SMB.PEWS = \_SB.PCI0.SMB.PEWS
-        \_SB.PCI0.SMB.PWDE = 0x01
+        \_SB.PCI0.SMB.PWDE = One
         \_SB.PCI0.SMB.PEWD = Zero
         \_SB.AWAK (Arg0)
         If ((Arg0 == 0x03))
@@ -527,8 +527,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
         \_SB.PCI0.LPC0.H_EC.ADP1.ACDC = 0xFF
         MWAK (Arg0)
-        Notify (\_SB.PCI0, 0x00) // Bus Check
-        \_SB.PCI0.LPC0.H_EC.BKLI = 0x01
+        Notify (\_SB.PCI0, Zero) // Bus Check
+        \_SB.PCI0.LPC0.H_EC.BKLI = One
         E666 = 0x82
         Return (Zero)
     }
@@ -537,7 +537,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
     {
         Method (_SST, 1, NotSerialized)  // _SST: System Status
         {
-            If ((Arg0 == 0x01))
+            If ((Arg0 == One))
             {
                 Debug = "===== SST Working ====="
             }
@@ -559,7 +559,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         }
     }
 
-    Name (GPIC, 0x00)
+    Name (GPIC, Zero)
     Method (_PIC, 1, NotSerialized)  // _PIC: Interrupt Model
     {
         GPIC = Arg0
@@ -580,13 +580,13 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 Name (_UID, "BTLD")  // _UID: Unique ID
                 Method (_STA, 0, NotSerialized)  // _STA: Status
                 {
-                    If ((V089 == 0x00))
+                    If ((V089 == Zero))
                     {
                         Return (0x0F)
                     }
                     Else
                     {
-                        Return (0x00)
+                        Return (Zero)
                     }
                 }
 
@@ -596,32 +596,32 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     {
                         Switch (ToInteger (Arg2))
                         {
-                            Case (0x00)
+                            Case (Zero)
                             {
-                                Return (Buffer (0x01)
+                                Return (Buffer (One)
                                 {
                                      0x0F                                             // .
                                 })
                             }
-                            Case (0x01)
+                            Case (One)
                             {
                                 Return (O086) /* \_SB_.O086 */
                             }
                             Case (0x02)
                             {
-                                O086 = 0x00
+                                O086 = Zero
                                 Return (O086) /* \_SB_.O086 */
                             }
                             Case (0x03)
                             {
-                                O086 = 0x01
+                                O086 = One
                                 Return (O086) /* \_SB_.O086 */
                             }
 
                         }
                     }
 
-                    Return (Buffer (0x01)
+                    Return (Buffer (One)
                     {
                          0x00                                             // .
                     })
@@ -642,9 +642,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         {
             Name (_HID, EisaId ("PNP0A08") /* PCI Express Bus */)  // _HID: Hardware ID
             Name (_CID, EisaId ("PNP0A03") /* PCI Bus */)  // _CID: Compatible ID
-            Name (_UID, 0x01)  // _UID: Unique ID
-            Name (_BBN, 0x00)  // _BBN: BIOS Bus Number
-            Name (_ADR, 0x00)  // _ADR: Address
+            Name (_UID, One)  // _UID: Unique ID
+            Name (_BBN, Zero)  // _BBN: BIOS Bus Number
+            Name (_ADR, Zero)  // _ADR: Address
             Method (_INI, 0, NotSerialized)  // _INI: Initialize
             {
                 If ((GPIC != Zero))
@@ -655,11 +655,11 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 OSTP ()
             }
 
-            Name (SUPP, 0x00)
-            Name (CTRL, 0x00)
+            Name (SUPP, Zero)
+            Name (CTRL, Zero)
             Method (_OSC, 4, NotSerialized)  // _OSC: Operating System Capabilities
             {
-                CreateDWordField (Arg3, 0x00, CDW1)
+                CreateDWordField (Arg3, Zero, CDW1)
                 CreateDWordField (Arg3, 0x04, CDW2)
                 CreateDWordField (Arg3, 0x08, CDW3)
                 If ((Arg0 == ToUUID ("33db4d5b-1ff7-401c-9657-7441c03dd766") /* PCI Host Bridge Device */))
@@ -684,9 +684,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     }
 
                     CTRL &= 0x1D
-                    If (~(CDW1 & 0x01))
+                    If (~(CDW1 & One))
                     {
-                        If ((CTRL & 0x01)){}
+                        If ((CTRL & One)){}
                         If ((CTRL & 0x04)){}
                         If ((CTRL & 0x10)){}
                     }
@@ -711,7 +711,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 }
             }
 
-            OperationRegion (K8ST, SystemMemory, 0xCE4F9B98, 0x00000068)
+            OperationRegion (K8ST, SystemMemory, 0xCE4F9B98, 0x68)
             Field (K8ST, AnyAcc, NoLock, Preserve)
             {
                 C0_0,   16, 
@@ -991,7 +991,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 CreateDWordField (RSRC, \_SB.PCI0._Y01._LEN, BT2L)  // _LEN: Length
                 Local0 = PCIB /* \_SB_.PCI0.PCIB */
                 BT1S = TOML /* \_SB_.PCI0.TOML */
-                BT1M = (Local0 - 0x01)
+                BT1M = (Local0 - One)
                 BT1L = (Local0 - TOML) /* \_SB_.PCI0.TOML */
                 CreateQWordField (RSRC, \_SB.PCI0._Y02._MIN, M1MN)  // _MIN: Minimum Base Address
                 CreateQWordField (RSRC, \_SB.PCI0._Y02._MAX, M1MX)  // _MAX: Maximum Base Address
@@ -1057,16 +1057,16 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         Package (0x04)
                         {
                             0x0001FFFF, 
-                            0x00, 
-                            0x00, 
+                            Zero, 
+                            Zero, 
                             0x28
                         }, 
 
                         Package (0x04)
                         {
                             0x0001FFFF, 
-                            0x01, 
-                            0x00, 
+                            One, 
+                            Zero, 
                             0x29
                         }, 
 
@@ -1074,7 +1074,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         {
                             0x0001FFFF, 
                             0x02, 
-                            0x00, 
+                            Zero, 
                             0x2A
                         }, 
 
@@ -1082,39 +1082,39 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         {
                             0x0001FFFF, 
                             0x03, 
-                            0x00, 
+                            Zero, 
                             0x2B
                         }, 
 
                         Package (0x04)
                         {
                             0x0008FFFF, 
-                            0x00, 
-                            0x00, 
+                            Zero, 
+                            Zero, 
                             0x2B
                         }, 
 
                         Package (0x04)
                         {
                             0x0008FFFF, 
-                            0x01, 
-                            0x00, 
+                            One, 
+                            Zero, 
                             0x24
                         }, 
 
                         Package (0x04)
                         {
                             0x0014FFFF, 
-                            0x00, 
-                            0x00, 
+                            Zero, 
+                            Zero, 
                             0x10
                         }, 
 
                         Package (0x04)
                         {
                             0x0014FFFF, 
-                            0x01, 
-                            0x00, 
+                            One, 
+                            Zero, 
                             0x11
                         }, 
 
@@ -1122,7 +1122,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         {
                             0x0014FFFF, 
                             0x02, 
-                            0x00, 
+                            Zero, 
                             0x12
                         }, 
 
@@ -1130,7 +1130,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         {
                             0x0014FFFF, 
                             0x03, 
-                            0x00, 
+                            Zero, 
                             0x13
                         }
                     })
@@ -1142,17 +1142,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         Package (0x04)
                         {
                             0x0001FFFF, 
-                            0x00, 
+                            Zero, 
                             ^LPC0.LNKA, 
-                            0x00
+                            Zero
                         }, 
 
                         Package (0x04)
                         {
                             0x0001FFFF, 
-                            0x01, 
+                            One, 
                             ^LPC0.LNKB, 
-                            0x00
+                            Zero
                         }, 
 
                         Package (0x04)
@@ -1160,7 +1160,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             0x0001FFFF, 
                             0x02, 
                             ^LPC0.LNKC, 
-                            0x00
+                            Zero
                         }, 
 
                         Package (0x04)
@@ -1168,39 +1168,39 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             0x0001FFFF, 
                             0x03, 
                             ^LPC0.LNKD, 
-                            0x00
+                            Zero
                         }, 
 
                         Package (0x04)
                         {
                             0x0008FFFF, 
-                            0x00, 
+                            Zero, 
                             ^LPC0.LNKD, 
-                            0x00
+                            Zero
                         }, 
 
                         Package (0x04)
                         {
                             0x0008FFFF, 
-                            0x01, 
+                            One, 
                             ^LPC0.LNKE, 
-                            0x00
+                            Zero
                         }, 
 
                         Package (0x04)
                         {
                             0x0014FFFF, 
-                            0x00, 
+                            Zero, 
                             ^LPC0.LNKA, 
-                            0x00
+                            Zero
                         }, 
 
                         Package (0x04)
                         {
                             0x0014FFFF, 
-                            0x01, 
+                            One, 
                             ^LPC0.LNKB, 
-                            0x00
+                            Zero
                         }, 
 
                         Package (0x04)
@@ -1208,7 +1208,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             0x0014FFFF, 
                             0x02, 
                             ^LPC0.LNKC, 
-                            0x00
+                            Zero
                         }, 
 
                         Package (0x04)
@@ -1216,7 +1216,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             0x0014FFFF, 
                             0x03, 
                             ^LPC0.LNKD, 
-                            0x00
+                            Zero
                         }
                     })
                 }
@@ -1273,7 +1273,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             Method (WFIO, 2, Serialized)
             {
                 Local0 = (Arg0 << 0x02)
-                WMEM (0xFED81500, Local0, 0x16, 0x01, Arg1)
+                WMEM (0xFED81500, Local0, 0x16, One, Arg1)
             }
 
             Device (GPP0)
@@ -1300,16 +1300,16 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
-                                0x00, 
+                                Zero, 
+                                Zero, 
                                 0x18
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
-                                0x00, 
+                                One, 
+                                Zero, 
                                 0x19
                             }, 
 
@@ -1317,7 +1317,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x02, 
-                                0x00, 
+                                Zero, 
                                 0x1A
                             }, 
 
@@ -1325,7 +1325,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x03, 
-                                0x00, 
+                                Zero, 
                                 0x1B
                             }
                         })
@@ -1337,17 +1337,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
+                                Zero, 
                                 ^^LPC0.LNKA, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
+                                One, 
                                 ^^LPC0.LNKB, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -1355,7 +1355,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x02, 
                                 ^^LPC0.LNKC, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -1363,7 +1363,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x03, 
                                 ^^LPC0.LNKD, 
-                                0x00
+                                Zero
                             }
                         })
                     }
@@ -1394,16 +1394,16 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
-                                0x00, 
+                                Zero, 
+                                Zero, 
                                 0x1C
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
-                                0x00, 
+                                One, 
+                                Zero, 
                                 0x1D
                             }, 
 
@@ -1411,7 +1411,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x02, 
-                                0x00, 
+                                Zero, 
                                 0x1E
                             }, 
 
@@ -1419,7 +1419,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x03, 
-                                0x00, 
+                                Zero, 
                                 0x1F
                             }
                         })
@@ -1431,17 +1431,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
+                                Zero, 
                                 ^^LPC0.LNKE, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
+                                One, 
                                 ^^LPC0.LNKF, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -1449,7 +1449,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x02, 
                                 ^^LPC0.LNKG, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -1457,7 +1457,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x03, 
                                 ^^LPC0.LNKH, 
-                                0x00
+                                Zero
                             }
                         })
                     }
@@ -1485,7 +1485,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         Name (QWRY, Package (0x07)
                         {
                             0x02, 
-                            0x01, 
+                            One, 
                             0x24, 
                             0x1E, 
                             0x1E, 
@@ -1521,16 +1521,16 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
-                                0x00, 
+                                Zero, 
+                                Zero, 
                                 0x20
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
-                                0x00, 
+                                One, 
+                                Zero, 
                                 0x21
                             }, 
 
@@ -1538,7 +1538,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x02, 
-                                0x00, 
+                                Zero, 
                                 0x22
                             }, 
 
@@ -1546,7 +1546,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x03, 
-                                0x00, 
+                                Zero, 
                                 0x23
                             }
                         })
@@ -1558,17 +1558,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
+                                Zero, 
                                 ^^LPC0.LNKA, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
+                                One, 
                                 ^^LPC0.LNKB, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -1576,7 +1576,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x02, 
                                 ^^LPC0.LNKC, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -1584,7 +1584,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x03, 
                                 ^^LPC0.LNKD, 
-                                0x00
+                                Zero
                             }
                         })
                     }
@@ -1636,16 +1636,16 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
-                                0x00, 
+                                Zero, 
+                                Zero, 
                                 0x24
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
-                                0x00, 
+                                One, 
+                                Zero, 
                                 0x25
                             }, 
 
@@ -1653,7 +1653,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x02, 
-                                0x00, 
+                                Zero, 
                                 0x26
                             }, 
 
@@ -1661,7 +1661,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x03, 
-                                0x00, 
+                                Zero, 
                                 0x27
                             }
                         })
@@ -1673,17 +1673,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
+                                Zero, 
                                 ^^LPC0.LNKE, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
+                                One, 
                                 ^^LPC0.LNKF, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -1691,7 +1691,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x02, 
                                 ^^LPC0.LNKG, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -1699,7 +1699,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x03, 
                                 ^^LPC0.LNKH, 
-                                0x00
+                                Zero
                             }
                         })
                     }
@@ -1730,16 +1730,16 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
-                                0x00, 
+                                Zero, 
+                                Zero, 
                                 0x28
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
-                                0x00, 
+                                One, 
+                                Zero, 
                                 0x29
                             }, 
 
@@ -1747,7 +1747,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x02, 
-                                0x00, 
+                                Zero, 
                                 0x2A
                             }, 
 
@@ -1755,7 +1755,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x03, 
-                                0x00, 
+                                Zero, 
                                 0x2B
                             }
                         })
@@ -1767,17 +1767,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
+                                Zero, 
                                 ^^LPC0.LNKA, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
+                                One, 
                                 ^^LPC0.LNKB, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -1785,7 +1785,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x02, 
                                 ^^LPC0.LNKC, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -1793,7 +1793,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x03, 
                                 ^^LPC0.LNKD, 
-                                0x00
+                                Zero
                             }
                         })
                     }
@@ -1824,16 +1824,16 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
-                                0x00, 
+                                Zero, 
+                                Zero, 
                                 0x2C
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
-                                0x00, 
+                                One, 
+                                Zero, 
                                 0x2D
                             }, 
 
@@ -1841,7 +1841,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x02, 
-                                0x00, 
+                                Zero, 
                                 0x2E
                             }, 
 
@@ -1849,7 +1849,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x03, 
-                                0x00, 
+                                Zero, 
                                 0x2F
                             }
                         })
@@ -1861,17 +1861,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
+                                Zero, 
                                 ^^LPC0.LNKE, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
+                                One, 
                                 ^^LPC0.LNKF, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -1879,7 +1879,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x02, 
                                 ^^LPC0.LNKG, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -1887,7 +1887,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x03, 
                                 ^^LPC0.LNKH, 
-                                0x00
+                                Zero
                             }
                         })
                     }
@@ -1918,16 +1918,16 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
-                                0x00, 
+                                Zero, 
+                                Zero, 
                                 0x30
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
-                                0x00, 
+                                One, 
+                                Zero, 
                                 0x31
                             }, 
 
@@ -1935,7 +1935,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x02, 
-                                0x00, 
+                                Zero, 
                                 0x32
                             }, 
 
@@ -1943,7 +1943,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x03, 
-                                0x00, 
+                                Zero, 
                                 0x33
                             }
                         })
@@ -1955,17 +1955,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
+                                Zero, 
                                 ^^LPC0.LNKA, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
+                                One, 
                                 ^^LPC0.LNKB, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -1973,7 +1973,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x02, 
                                 ^^LPC0.LNKC, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -1981,7 +1981,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x03, 
                                 ^^LPC0.LNKD, 
-                                0x00
+                                Zero
                             }
                         })
                     }
@@ -2012,16 +2012,16 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
-                                0x00, 
+                                Zero, 
+                                Zero, 
                                 0x34
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
-                                0x00, 
+                                One, 
+                                Zero, 
                                 0x35
                             }, 
 
@@ -2029,7 +2029,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x02, 
-                                0x00, 
+                                Zero, 
                                 0x36
                             }, 
 
@@ -2037,7 +2037,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x03, 
-                                0x00, 
+                                Zero, 
                                 0x37
                             }
                         })
@@ -2049,17 +2049,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
+                                Zero, 
                                 ^^LPC0.LNKE, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
+                                One, 
                                 ^^LPC0.LNKF, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -2067,7 +2067,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x02, 
                                 ^^LPC0.LNKG, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -2075,7 +2075,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x03, 
                                 ^^LPC0.LNKH, 
-                                0x00
+                                Zero
                             }
                         })
                     }
@@ -2116,7 +2116,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         {
                             0x5A, 
                             0x3C, 
-                            0x01, 
+                            One, 
                             0x02, 
                             0x03, 
                             0x04, 
@@ -2256,7 +2256,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Name (_ADR, 0x03)  // _ADR: Address
                     Method (_S0W, 0, NotSerialized)  // _S0W: S0 Device Wake State
                     {
-                        Return (0x00)
+                        Return (Zero)
                     }
 
                     Method (_PRW, 0, NotSerialized)  // _PRW: Power Resources for Wake
@@ -2299,11 +2299,11 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFF, 
                                 0xFF, 
-                                0x00, 
-                                0x00
+                                Zero, 
+                                Zero
                             })
-                            PCKG [0x00] = Arg0
-                            PCKG [0x01] = Arg1
+                            PCKG [Zero] = Arg0
+                            PCKG [One] = Arg1
                             Return (PCKG) /* \_SB_.PCI0.GP17.XHC0.RHUB.GUPC.PCKG */
                         }
 
@@ -2314,8 +2314,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFF, 
                                 0x09, 
-                                0x00, 
-                                0x00
+                                Zero, 
+                                Zero
                             })
                             Name (_PLD, Package (0x01)  // _PLD: Physical Location of Device
                             {
@@ -2344,7 +2344,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                     PLD_CardCageNumber     = 0x0,
                                     PLD_Reference          = 0x0,
                                     PLD_Rotation           = 0x0,
-                                    PLD_Order              = 0x0)
+                                    PLD_Order              = 0x0,
+                                    PLD_VerticalOffset     = 0x0,
+                                    PLD_HorizontalOffset   = 0x0)
 
                             })
                         }
@@ -2355,9 +2357,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Name (_UPC, Package (0x04)  // _UPC: USB Port Capabilities
                             {
                                 0xFF, 
-                                0x00, 
-                                0x00, 
-                                0x00
+                                Zero, 
+                                Zero, 
+                                Zero
                             })
                             Name (_PLD, Package (0x01)  // _PLD: Physical Location of Device
                             {
@@ -2386,7 +2388,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                     PLD_CardCageNumber     = 0x0,
                                     PLD_Reference          = 0x0,
                                     PLD_Rotation           = 0x0,
-                                    PLD_Order              = 0x0)
+                                    PLD_Order              = 0x0,
+                                    PLD_VerticalOffset     = 0x0,
+                                    PLD_HorizontalOffset   = 0x0)
 
                             })
                         }
@@ -2397,9 +2401,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Name (_UPC, Package (0x04)  // _UPC: USB Port Capabilities
                             {
                                 0xFF, 
-                                0x00, 
-                                0x00, 
-                                0x00
+                                Zero, 
+                                Zero, 
+                                Zero
                             })
                             Name (_PLD, Package (0x01)  // _PLD: Physical Location of Device
                             {
@@ -2428,7 +2432,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                     PLD_CardCageNumber     = 0x0,
                                     PLD_Reference          = 0x0,
                                     PLD_Rotation           = 0x0,
-                                    PLD_Order              = 0x0)
+                                    PLD_Order              = 0x0,
+                                    PLD_VerticalOffset     = 0x0,
+                                    PLD_HorizontalOffset   = 0x0)
 
                             })
                         }
@@ -2543,8 +2549,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFF, 
                                 0x09, 
-                                0x00, 
-                                0x00
+                                Zero, 
+                                Zero
                             })
                             Name (_PLD, Package (0x01)  // _PLD: Physical Location of Device
                             {
@@ -2573,7 +2579,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                     PLD_CardCageNumber     = 0x0,
                                     PLD_Reference          = 0x0,
                                     PLD_Rotation           = 0x0,
-                                    PLD_Order              = 0x0)
+                                    PLD_Order              = 0x0,
+                                    PLD_VerticalOffset     = 0x0,
+                                    PLD_HorizontalOffset   = 0x0)
 
                             })
                         }
@@ -2585,8 +2593,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFF, 
                                 0x03, 
-                                0x00, 
-                                0x00
+                                Zero, 
+                                Zero
                             })
                             Name (_PLD, Package (0x01)  // _PLD: Physical Location of Device
                             {
@@ -2615,7 +2623,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                     PLD_CardCageNumber     = 0x0,
                                     PLD_Reference          = 0x0,
                                     PLD_Rotation           = 0x0,
-                                    PLD_Order              = 0x0)
+                                    PLD_Order              = 0x0,
+                                    PLD_VerticalOffset     = 0x0,
+                                    PLD_HorizontalOffset   = 0x0)
 
                             })
                         }
@@ -2627,8 +2637,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFF, 
                                 0x03, 
-                                0x00, 
-                                0x00
+                                Zero, 
+                                Zero
                             })
                             Name (_PLD, Package (0x01)  // _PLD: Physical Location of Device
                             {
@@ -2657,7 +2667,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                     PLD_CardCageNumber     = 0x0,
                                     PLD_Reference          = 0x0,
                                     PLD_Rotation           = 0x0,
-                                    PLD_Order              = 0x0)
+                                    PLD_Order              = 0x0,
+                                    PLD_VerticalOffset     = 0x0,
+                                    PLD_HorizontalOffset   = 0x0)
 
                             })
                         }
@@ -2672,8 +2684,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
                             Name (_UPC, Package (0x04)  // _UPC: USB Port Capabilities
                             {
-                                0x00, 
-                                0x00, 
+                                Zero, 
+                                Zero, 
                                 Zero, 
                                 Zero
                             })
@@ -2726,7 +2738,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         Name (_ADR, Zero)  // _ADR: Address
                         Method (_STA, 0, NotSerialized)  // _STA: Status
                         {
-                            Return (0x00)
+                            Return (Zero)
                         }
 
                         Device (PRT1)
@@ -2880,7 +2892,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Name (_ADR, 0x07)  // _ADR: Address
                     Method (_STA, 0, Serialized)  // _STA: Status
                     {
-                        Return (0x00)
+                        Return (Zero)
                     }
                 }
             }
@@ -2909,16 +2921,16 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
-                                0x00, 
+                                Zero, 
+                                Zero, 
                                 0x36
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
-                                0x00, 
+                                One, 
+                                Zero, 
                                 0x37
                             }, 
 
@@ -2926,7 +2938,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x02, 
-                                0x00, 
+                                Zero, 
                                 0x34
                             }, 
 
@@ -2934,7 +2946,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 0xFFFF, 
                                 0x03, 
-                                0x00, 
+                                Zero, 
                                 0x35
                             }
                         })
@@ -2946,17 +2958,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x00, 
+                                Zero, 
                                 ^^LPC0.LNKG, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
                             {
                                 0xFFFF, 
-                                0x01, 
+                                One, 
                                 ^^LPC0.LNKH, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -2964,7 +2976,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x02, 
                                 ^^LPC0.LNKE, 
-                                0x00
+                                Zero
                             }, 
 
                             Package (0x04)
@@ -2972,7 +2984,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0xFFFF, 
                                 0x03, 
                                 ^^LPC0.LNKF, 
-                                0x00
+                                Zero
                             }
                         })
                     }
@@ -3027,8 +3039,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     {
                         Name (MSA0, Package (0x02)
                         {
-                            0x00, 
-                            0x00
+                            Zero, 
+                            Zero
                         })
                         Name (MSA1, Package (0x12)
                         {
@@ -3036,9 +3048,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             0x54, 
                             0x44, 
                             0x53, 
-                            0x01, 
+                            One, 
                             0x02, 
-                            0x01, 
+                            One, 
                             0x19, 
                             0x17, 
                             0x1D, 
@@ -3051,7 +3063,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             0x15, 
                             0x1D
                         })
-                        If ((MTKS == 0x01))
+                        If ((MTKS == One))
                         {
                             Return (MSA1) /* \_SB_.PCI0.GPP1.WLAN.MTDS.MSA1 */
                         }
@@ -3061,7 +3073,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         }
                     }
 
-                    OperationRegion (FLDR, PCI_Config, 0x00, 0xFF)
+                    OperationRegion (FLDR, PCI_Config, Zero, 0xFF)
                     Field (FLDR, ByteAcc, NoLock, Preserve)
                     {
                         MTVD,   16, 
@@ -3108,7 +3120,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     {
                         If ((MTKS == 0xFF))
                         {
-                            Return (0x00)
+                            Return (Zero)
                         }
                         Else
                         {
@@ -3196,7 +3208,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 PowerResource (P0NV, 0x00, 0x0000)
                 {
                     Name (D0NV, One)
-                    Name (SLPS, 0x01)
+                    Name (SLPS, One)
                     Method (_STA, 0, NotSerialized)  // _STA: Status
                     {
                         Return (D0NV) /* \_SB_.PCI0.GPP4.P0NV.D0NV */
@@ -3666,7 +3678,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     IRQ (Level, ActiveLow, Exclusive, )
                         {3,4,5,7}
                 })
-                OperationRegion (KBDD, SystemIO, 0x64, 0x01)
+                OperationRegion (KBDD, SystemIO, 0x64, One)
                 Field (KBDD, ByteAcc, NoLock, Preserve)
                 {
                     PD64,   8
@@ -3722,7 +3734,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 Device (LNKA)
                 {
                     Name (_HID, EisaId ("PNP0C0F") /* PCI Interrupt Link Device */)  // _HID: Hardware ID
-                    Name (_UID, 0x01)  // _UID: Unique ID
+                    Name (_UID, One)  // _UID: Unique ID
                     Method (_STA, 0, NotSerialized)  // _STA: Status
                     {
                         If (PIRA)
@@ -3748,14 +3760,14 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                     {
                         Local0 = IPRS /* \_SB_.PCI0.LPC0.IPRS */
-                        CreateWordField (Local0, 0x01, IRQ0)
-                        IRQ0 = (0x01 << PIRA) /* \_SB_.PCI0.LPC0.PIRA */
+                        CreateWordField (Local0, One, IRQ0)
+                        IRQ0 = (One << PIRA) /* \_SB_.PCI0.LPC0.PIRA */
                         Return (Local0)
                     }
 
                     Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
                     {
-                        CreateWordField (Arg0, 0x01, IRQ0)
+                        CreateWordField (Arg0, One, IRQ0)
                         FindSetRightBit (IRQ0, Local0)
                         Local0--
                         INTA (Local0)
@@ -3791,14 +3803,14 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                     {
                         Local0 = IPRS /* \_SB_.PCI0.LPC0.IPRS */
-                        CreateWordField (Local0, 0x01, IRQ0)
-                        IRQ0 = (0x01 << PIRB) /* \_SB_.PCI0.LPC0.PIRB */
+                        CreateWordField (Local0, One, IRQ0)
+                        IRQ0 = (One << PIRB) /* \_SB_.PCI0.LPC0.PIRB */
                         Return (Local0)
                     }
 
                     Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
                     {
-                        CreateWordField (Arg0, 0x01, IRQ0)
+                        CreateWordField (Arg0, One, IRQ0)
                         FindSetRightBit (IRQ0, Local0)
                         Local0--
                         INTB (Local0)
@@ -3834,14 +3846,14 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                     {
                         Local0 = IPRS /* \_SB_.PCI0.LPC0.IPRS */
-                        CreateWordField (Local0, 0x01, IRQ0)
-                        IRQ0 = (0x01 << PIRC) /* \_SB_.PCI0.LPC0.PIRC */
+                        CreateWordField (Local0, One, IRQ0)
+                        IRQ0 = (One << PIRC) /* \_SB_.PCI0.LPC0.PIRC */
                         Return (Local0)
                     }
 
                     Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
                     {
-                        CreateWordField (Arg0, 0x01, IRQ0)
+                        CreateWordField (Arg0, One, IRQ0)
                         FindSetRightBit (IRQ0, Local0)
                         Local0--
                         INTC (Local0)
@@ -3877,14 +3889,14 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                     {
                         Local0 = IPRS /* \_SB_.PCI0.LPC0.IPRS */
-                        CreateWordField (Local0, 0x01, IRQ0)
-                        IRQ0 = (0x01 << PIRD) /* \_SB_.PCI0.LPC0.PIRD */
+                        CreateWordField (Local0, One, IRQ0)
+                        IRQ0 = (One << PIRD) /* \_SB_.PCI0.LPC0.PIRD */
                         Return (Local0)
                     }
 
                     Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
                     {
-                        CreateWordField (Arg0, 0x01, IRQ0)
+                        CreateWordField (Arg0, One, IRQ0)
                         FindSetRightBit (IRQ0, Local0)
                         Local0--
                         INTD (Local0)
@@ -3920,14 +3932,14 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                     {
                         Local0 = IPRS /* \_SB_.PCI0.LPC0.IPRS */
-                        CreateWordField (Local0, 0x01, IRQ0)
-                        IRQ0 = (0x01 << PIRE) /* \_SB_.PCI0.LPC0.PIRE */
+                        CreateWordField (Local0, One, IRQ0)
+                        IRQ0 = (One << PIRE) /* \_SB_.PCI0.LPC0.PIRE */
                         Return (Local0)
                     }
 
                     Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
                     {
-                        CreateWordField (Arg0, 0x01, IRQ0)
+                        CreateWordField (Arg0, One, IRQ0)
                         FindSetRightBit (IRQ0, Local0)
                         Local0--
                         PIRE = Local0
@@ -3963,14 +3975,14 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                     {
                         Local0 = IPRS /* \_SB_.PCI0.LPC0.IPRS */
-                        CreateWordField (Local0, 0x01, IRQ0)
-                        IRQ0 = (0x01 << PIRF) /* \_SB_.PCI0.LPC0.PIRF */
+                        CreateWordField (Local0, One, IRQ0)
+                        IRQ0 = (One << PIRF) /* \_SB_.PCI0.LPC0.PIRF */
                         Return (Local0)
                     }
 
                     Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
                     {
-                        CreateWordField (Arg0, 0x01, IRQ0)
+                        CreateWordField (Arg0, One, IRQ0)
                         FindSetRightBit (IRQ0, Local0)
                         Local0--
                         PIRF = Local0
@@ -4006,14 +4018,14 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                     {
                         Local0 = IPRS /* \_SB_.PCI0.LPC0.IPRS */
-                        CreateWordField (Local0, 0x01, IRQ0)
-                        IRQ0 = (0x01 << PIRG) /* \_SB_.PCI0.LPC0.PIRG */
+                        CreateWordField (Local0, One, IRQ0)
+                        IRQ0 = (One << PIRG) /* \_SB_.PCI0.LPC0.PIRG */
                         Return (Local0)
                     }
 
                     Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
                     {
-                        CreateWordField (Arg0, 0x01, IRQ0)
+                        CreateWordField (Arg0, One, IRQ0)
                         FindSetRightBit (IRQ0, Local0)
                         Local0--
                         PIRG = Local0
@@ -4049,14 +4061,14 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                     {
                         Local0 = IPRS /* \_SB_.PCI0.LPC0.IPRS */
-                        CreateWordField (Local0, 0x01, IRQ0)
-                        IRQ0 = (0x01 << PIRH) /* \_SB_.PCI0.LPC0.PIRH */
+                        CreateWordField (Local0, One, IRQ0)
+                        IRQ0 = (One << PIRH) /* \_SB_.PCI0.LPC0.PIRH */
                         Return (Local0)
                     }
 
                     Method (_SRS, 1, NotSerialized)  // _SRS: Set Resource Settings
                     {
-                        CreateWordField (Arg0, 0x01, IRQ0)
+                        CreateWordField (Arg0, One, IRQ0)
                         FindSetRightBit (IRQ0, Local0)
                         Local0--
                         PIRH = Local0
@@ -4255,7 +4267,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     {
                     }
 
-                    Name (MSP0, 0x00)
+                    Name (MSP0, Zero)
                     Method (_STA, 0, NotSerialized)  // _STA: Status
                     {
                         Return (MSP0) /* \_SB_.PCI0.LPC0.MSE0.MSP0 */
@@ -4419,8 +4431,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     }
                 }
 
-                Name (\MIEC, 0x01)
-                Name (\LIDF, 0x01)
+                Name (\MIEC, One)
+                Name (\LIDF, One)
                 Device (H_EC)
                 {
                     Name (_HID, EisaId ("PNP0C09") /* Embedded Controller Device */)  // _HID: Hardware ID
@@ -4464,7 +4476,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Name (RCMD, Zero)
                     Name (ONTM, Zero)
                     Name (BNUM, Zero)
-                    Name (RDHW, 0x00)
+                    Name (RDHW, Zero)
                     Mutex (ECMT, 0x00)
                     Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
                     {
@@ -4669,7 +4681,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             }
                         }
 
-                        Return (0x00)
+                        Return (Zero)
                     }
 
                     Method (ECWT, 2, Serialized)
@@ -4712,22 +4724,22 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Local0 = (ECRD (RefOf (ECWR)) & One)
                             If (((Local0 != ACDC) || (ACDC == 0xFF)))
                             {
-                                CreateWordField (XX00, 0x00, SSZE)
+                                CreateWordField (XX00, Zero, SSZE)
                                 CreateByteField (XX00, 0x02, ACST)
                                 SSZE = 0x03
                                 ACDC = Local0
                                 If (ACDC)
                                 {
-                                    ^^^^GP17.VGA.AFN4 (0x01)
-                                    ACST = 0x00
+                                    ^^^^GP17.VGA.AFN4 (One)
+                                    ACST = Zero
                                 }
                                 Else
                                 {
                                     ^^^^GP17.VGA.AFN4 (0x02)
-                                    ACST = 0x01
+                                    ACST = One
                                 }
 
-                                ALIB (0x01, XX00)
+                                ALIB (One, XX00)
                             }
 
                             Return (Local0)
@@ -4758,32 +4770,32 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         {
                             Name (BPK1, Package (0x15)
                             {
-                                0x01, 
-                                0x00, 
-                                0xFFFFFFFF, 
-                                0xFFFFFFFF, 
-                                0x01, 
-                                0xFFFFFFFF, 
-                                0x00, 
-                                0x00, 
+                                One, 
+                                Zero, 
+                                Ones, 
+                                Ones, 
+                                One, 
+                                Ones, 
+                                Zero, 
+                                Zero, 
                                 0x64, 
                                 0x00017318, 
-                                0x00, 
-                                0x00, 
-                                0x00, 
-                                0x00, 
+                                Zero, 
+                                Zero, 
+                                Zero, 
+                                Zero, 
                                 0x64, 
-                                0x00, 
+                                Zero, 
                                 "SR Real Battery", 
                                 "123456789", 
                                 "LiP", 
                                 "LENOVO", 
-                                0x01
+                                One
                             })
-                            If ((XX10 == 0x01))
+                            If ((XX10 == One))
                             {
-                                Local0 = (B1DC * B1FV)
-                                Local0 = (Local0 / 0x03E8)
+                                Local0 = (B1DC * B1FV) /* \_SB_.PCI0.LPC0.H_EC.B1FV */
+                                Local0 /= 0x03E8
                                 BPK1 [0x02] = Local0
                             }
                             Else
@@ -4792,10 +4804,10 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 BPK1 [0x02] = Local0
                             }
 
-                            If ((XX10 == 0x01))
+                            If ((XX10 == One))
                             {
-                                Local1 = (B1FC * B1FV)
-                                Local1 = (Local1 / 0x03E8)
+                                Local1 = (B1FC * B1FV) /* \_SB_.PCI0.LPC0.H_EC.B1FV */
+                                Local1 /= 0x03E8
                                 BPK1 [0x03] = Local1
                             }
                             Else
@@ -4807,7 +4819,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             BPK1 [0x06] = (Local1 / 0x0A)
                             BPK1 [0x07] = (Local1 / 0x19)
                             BPK1 [0x08] = BCYC /* \_SB_.PCI0.LPC0.H_EC.BCYC */
-                            SMST = 0x00
+                            SMST = Zero
                             SMCD = 0x20
                             SMAD = 0x16
                             SMPR = 0x0B
@@ -4818,7 +4830,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 If ((SMPR == Zero))
                                 {
                                     BPK1 [0x13] = SM2S ()
-                                    Local0 = 0x00
+                                    Local0 = Zero
                                 }
                                 Else
                                 {
@@ -4838,14 +4850,14 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 Ones, 
                                 Ones
                             })
-                            Local0 = 0x00
+                            Local0 = Zero
                             If ((ECWR & 0x04))
                             {
                                 Local0 = 0x02
                             }
                             ElseIf ((ECWR & 0x08))
                             {
-                                Local0 = 0x01
+                                Local0 = One
                             }
 
                             If ((ECWR & 0x40))
@@ -4853,37 +4865,37 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 Local0 |= 0x04
                             }
 
-                            PKG1 [0x00] = Local0
+                            PKG1 [Zero] = Local0
                             If ((B1ST & One))
                             {
-                                If ((XX10 == 0x01))
+                                If ((XX10 == One))
                                 {
-                                    Local0 = (B1CR * B1FV)
-                                    Local0 = (Local0 / 0x03E8)
-                                    PKG1 [0x01] = Local0
+                                    Local0 = (B1CR * B1FV) /* \_SB_.PCI0.LPC0.H_EC.B1FV */
+                                    Local0 /= 0x03E8
+                                    PKG1 [One] = Local0
                                 }
                                 Else
                                 {
                                     Local0 = (B1CR * 0x0A)
-                                    PKG1 [0x01] = Local0
+                                    PKG1 [One] = Local0
                                 }
                             }
-                            ElseIf ((XX10 == 0x01))
+                            ElseIf ((XX10 == One))
                             {
-                                Local0 = (B1CR * B1FV)
-                                Local0 = (Local0 / 0x03E8)
-                                PKG1 [0x01] = Local0
+                                Local0 = (B1CR * B1FV) /* \_SB_.PCI0.LPC0.H_EC.B1FV */
+                                Local0 /= 0x03E8
+                                PKG1 [One] = Local0
                             }
                             Else
                             {
                                 Local0 = (B1CR * 0x0A)
-                                PKG1 [0x01] = Local0
+                                PKG1 [One] = Local0
                             }
 
-                            If ((XX10 == 0x01))
+                            If ((XX10 == One))
                             {
-                                Local1 = (B1RC * B1FV)
-                                Local1 = (Local1 / 0x03E8)
+                                Local1 = (B1RC * B1FV) /* \_SB_.PCI0.LPC0.H_EC.B1FV */
+                                Local1 /= 0x03E8
                                 PKG1 [0x02] = Local1
                             }
                             Else
@@ -4921,8 +4933,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     {
                         If ((^^^GP17.VGA.BPUL <= 0x05))
                         {
-                            SWBL = 0x01
-                            VDAT = 0x00
+                            SWBL = One
+                            VDAT = Zero
                             VCMD = 0x33
                         }
 
@@ -4933,10 +4945,10 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
                     Method (_Q06, 0, Serialized)  // _Qxx: EC Query, xx=0x00-0xFF
                     {
-                        If ((SWBL == 0x01))
+                        If ((SWBL == One))
                         {
-                            SWBL = 0x00
-                            VDAT = 0x01
+                            SWBL = Zero
+                            VDAT = One
                             VCMD = 0x33
                         }
 
@@ -4964,19 +4976,19 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     {
                         If (ECAV)
                         {
-                            If ((Acquire (ECMT, 0xA000) == 0x00))
+                            If ((Acquire (ECMT, 0xA000) == Zero))
                             {
                                 If (MIEC)
                                 {
-                                    If (((LSTE && 0x01) == 0x00))
+                                    If (((LSTE && One) == Zero))
                                     {
-                                        LIDF = 0x01
-                                        LIDS = 0x01
+                                        LIDF = One
+                                        LIDS = One
                                     }
                                     Else
                                     {
-                                        LIDF = 0x00
-                                        LIDS = 0x00
+                                        LIDF = Zero
+                                        LIDS = Zero
                                     }
                                 }
 
@@ -5033,7 +5045,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
                     Method (_REG, 2, NotSerialized)  // _REG: Region Availability
                     {
-                        BKLI = 0x01
+                        BKLI = One
                         E666 = 0x82
                     }
 
@@ -5075,19 +5087,19 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         {
                             If (ECAV)
                             {
-                                If ((Acquire (ECMT, 0xA000) == 0x00))
+                                If ((Acquire (ECMT, 0xA000) == Zero))
                                 {
                                     If (MIEC)
                                     {
-                                        If (((LSTE && 0x01) == 0x00))
+                                        If (((LSTE && One) == Zero))
                                         {
-                                            LIDF = 0x01
-                                            LIDS = 0x01
+                                            LIDF = One
+                                            LIDS = One
                                         }
                                         Else
                                         {
-                                            LIDF = 0x00
-                                            LIDS = 0x00
+                                            LIDF = Zero
+                                            LIDS = Zero
                                         }
                                     }
 
@@ -5101,7 +5113,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
                     Method (\SM2S, 0, NotSerialized)
                     {
-                        Name (CHAR, 0x00)
+                        Name (CHAR, Zero)
                         Name (STR1, Buffer (0x25)
                         {
                             "0000000000                          "
@@ -5109,47 +5121,47 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         If (\_SB.PCI0.LPC0.H_EC.ECAV)
                         {
                             CHAR = \_SB.PCI0.LPC0.H_EC.SDAT
-                            STR1 [0x00] = CHAR /* \SM2S.CHAR */
-                            STR1 [0x01] = (CHAR >> 0x08)
+                            STR1 [Zero] = CHAR /* \SM2S.CHAR */
+                            STR1 [One] = (CHAR >> 0x08)
                             CHAR = \_SB.PCI0.LPC0.H_EC.SDA2
                             STR1 [0x02] = CHAR /* \SM2S.CHAR */
                             STR1 [0x03] = (CHAR >> 0x08)
                             CHAR = \_SB.PCI0.LPC0.H_EC.SDA4
-                            STR1 [0x04] = (CHAR >> 0x00)
+                            STR1 [0x04] = (CHAR >> Zero)
                             STR1 [0x05] = (CHAR >> 0x08)
                             STR1 [0x06] = (CHAR >> 0x10)
                             STR1 [0x07] = (CHAR >> 0x18)
                             CHAR = \_SB.PCI0.LPC0.H_EC.SDA5
-                            STR1 [0x08] = (CHAR >> 0x00)
+                            STR1 [0x08] = (CHAR >> Zero)
                             STR1 [0x09] = (CHAR >> 0x08)
                             STR1 [0x0A] = (CHAR >> 0x10)
                             STR1 [0x0B] = (CHAR >> 0x18)
                             CHAR = \_SB.PCI0.LPC0.H_EC.SDA6
-                            STR1 [0x0C] = (CHAR >> 0x00)
+                            STR1 [0x0C] = (CHAR >> Zero)
                             STR1 [0x0D] = (CHAR >> 0x08)
                             STR1 [0x0E] = (CHAR >> 0x10)
                             STR1 [0x0F] = (CHAR >> 0x18)
                             CHAR = \_SB.PCI0.LPC0.H_EC.SDA7
-                            STR1 [0x10] = (CHAR >> 0x00)
+                            STR1 [0x10] = (CHAR >> Zero)
                             STR1 [0x11] = (CHAR >> 0x08)
                             STR1 [0x12] = (CHAR >> 0x10)
                             STR1 [0x13] = (CHAR >> 0x18)
                             CHAR = \_SB.PCI0.LPC0.H_EC.SDA8
-                            STR1 [0x14] = (CHAR >> 0x00)
+                            STR1 [0x14] = (CHAR >> Zero)
                             STR1 [0x15] = (CHAR >> 0x08)
                             STR1 [0x16] = (CHAR >> 0x10)
                             STR1 [0x17] = (CHAR >> 0x18)
                             CHAR = \_SB.PCI0.LPC0.H_EC.SDA9
-                            STR1 [0x18] = (CHAR >> 0x00)
+                            STR1 [0x18] = (CHAR >> Zero)
                             STR1 [0x19] = (CHAR >> 0x08)
                             STR1 [0x1A] = (CHAR >> 0x10)
                             STR1 [0x1B] = (CHAR >> 0x18)
                             CHAR = \_SB.PCI0.LPC0.H_EC.SDAA
-                            STR1 [0x1C] = (CHAR >> 0x00)
+                            STR1 [0x1C] = (CHAR >> Zero)
                             STR1 [0x1D] = (CHAR >> 0x08)
                             STR1 [0x1E] = (CHAR >> 0x10)
                             STR1 [0x1F] = (CHAR >> 0x18)
-                            STR1 [\_SB.PCI0.LPC0.H_EC.SMCN] = 0x00
+                            STR1 [\_SB.PCI0.LPC0.H_EC.SMCN] = Zero
                         }
 
                         Return (STR1) /* \SM2S.STR1 */
@@ -5164,17 +5176,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Device (CYMC)
                     {
                         Name (_HID, "YMC2017")  // _HID: Hardware ID
-                        Name (_UID, 0x00)  // _UID: Unique ID
+                        Name (_UID, Zero)  // _UID: Unique ID
                         Method (_STA, 0, NotSerialized)  // _STA: Status
                         {
-                            Return (0x00)
+                            Return (Zero)
                         }
                     }
 
                     Device (HKDV)
                     {
                         Name (_HID, "LHK2019")  // _HID: Hardware ID
-                        Name (_UID, 0x00)  // _UID: Unique ID
+                        Name (_UID, Zero)  // _UID: Unique ID
                         Method (_STA, 0, NotSerialized)  // _STA: Status
                         {
                             Return (0x0F)
@@ -5184,9 +5196,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Device (VPC0)
                     {
                         Name (_HID, "VPC2004")  // _HID: Hardware ID
-                        Name (_UID, 0x00)  // _UID: Unique ID
+                        Name (_UID, Zero)  // _UID: Unique ID
                         Name (_VPC, 0xF40D0005)
-                        Name (VPCD, 0x00)
+                        Name (VPCD, Zero)
                         Method (_STA, 0, NotSerialized)  // _STA: Status
                         {
                             Return (0x0F)
@@ -5201,7 +5213,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         {
                             If (ECAV)
                             {
-                                If ((Arg0 == 0x01))
+                                If ((Arg0 == One))
                                 {
                                     VPCD = ECRD (RefOf (VCMD))
                                 }
@@ -5218,7 +5230,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         {
                             If (ECAV)
                             {
-                                If ((Arg0 == 0x01))
+                                If ((Arg0 == One))
                                 {
                                     ECWT (Arg1, RefOf (VCMD))
                                 }
@@ -5228,7 +5240,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 }
                             }
 
-                            Return (0x00)
+                            Return (Zero)
                         }
 
                         Method (SVCR, 1, Serialized)
@@ -5266,40 +5278,40 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             {
                                 ECWT (One, RefOf (CVEC))
                                 ECWT (One, RefOf (UCSA))
-                                Return (0x00)
+                                Return (Zero)
                             }
 
                             If ((Local0 == 0x0B))
                             {
                                 ECWT (One, RefOf (CVEC))
                                 ECWT (Zero, RefOf (UCSA))
-                                Return (0x00)
+                                Return (Zero)
                             }
 
                             If ((Local0 == 0x0E))
                             {
-                                ECWT (0x00, RefOf (FNHK))
+                                ECWT (Zero, RefOf (FNHK))
                                 ECWT (One, RefOf (HKST))
                             }
 
                             If ((Local0 == 0x0F))
                             {
-                                ECWT (0x01, RefOf (FNHK))
+                                ECWT (One, RefOf (FNHK))
                                 ECWT (One, RefOf (HKST))
                             }
 
                             If ((Local0 == 0x12))
                             {
                                 ECWT (One, RefOf (CREC))
-                                ECWT (0x00, RefOf (CGBE))
-                                Return (0x00)
+                                ECWT (Zero, RefOf (CGBE))
+                                Return (Zero)
                             }
 
                             If ((Local0 == 0x13))
                             {
                                 ECWT (One, RefOf (CREC))
                                 ECWT (One, RefOf (CGBE))
-                                Return (0x00)
+                                Return (Zero)
                             }
                         }
 
@@ -5428,9 +5440,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         })
                         Method (GBID, 0, Serialized)
                         {
-                            DerefOf (BIDF [0x00]) [0x00] = BCYC /* \_SB_.PCI0.LPC0.H_EC.BCYC */
-                            DerefOf (BIDF [0x02]) [0x00] = MIDL /* \_SB_.PCI0.LPC0.H_EC.MIDL */
-                            DerefOf (BIDF [0x02]) [0x01] = MIDH /* \_SB_.PCI0.LPC0.H_EC.MIDH */
+                            DerefOf (BIDF [Zero]) [Zero] = BCYC /* \_SB_.PCI0.LPC0.H_EC.BCYC */
+                            DerefOf (BIDF [0x02]) [Zero] = MIDL /* \_SB_.PCI0.LPC0.H_EC.MIDL */
+                            DerefOf (BIDF [0x02]) [One] = MIDH /* \_SB_.PCI0.LPC0.H_EC.MIDH */
                             DerefOf (BIDF [0x02]) [0x02] = HIDL /* \_SB_.PCI0.LPC0.H_EC.HIDL */
                             DerefOf (BIDF [0x02]) [0x03] = HIDH /* \_SB_.PCI0.LPC0.H_EC.HIDH */
                             DerefOf (BIDF [0x02]) [0x04] = FWVL /* \_SB_.PCI0.LPC0.H_EC.FWVL */
@@ -5441,23 +5453,23 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Return (BIDF) /* \_SB_.PCI0.LPC0.H_EC.VPC0.BIDF */
                         }
 
-                        Name (VBST, 0x00)
-                        Name (VBAC, 0x00)
-                        Name (VBPR, 0x00)
-                        Name (VBRC, 0x00)
-                        Name (VBPV, 0x00)
-                        Name (VBFC, 0x00)
-                        Name (VBCT, 0x00)
+                        Name (VBST, Zero)
+                        Name (VBAC, Zero)
+                        Name (VBPR, Zero)
+                        Name (VBRC, Zero)
+                        Name (VBPV, Zero)
+                        Name (VBFC, Zero)
+                        Name (VBCT, Zero)
                         Method (MHCF, 1, NotSerialized)
                         {
                             Local0 = Arg0
                             If ((Local0 && 0x20))
                             {
-                                FUEN = 0x01
+                                FUEN = One
                             }
                             Else
                             {
-                                FUEN = 0x00
+                                FUEN = Zero
                             }
 
                             Return (Local0)
@@ -5466,8 +5478,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         Method (MHPF, 1, NotSerialized)
                         {
                             Name (BFWB, Buffer (0x25){})
-                            CreateByteField (BFWB, 0x00, FB0)
-                            CreateByteField (BFWB, 0x01, FB1)
+                            CreateByteField (BFWB, Zero, FB0)
+                            CreateByteField (BFWB, One, FB1)
                             CreateByteField (BFWB, 0x02, FB2)
                             CreateByteField (BFWB, 0x03, FB3)
                             CreateWordField (BFWB, 0x04, FB4A)
@@ -5482,7 +5494,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             CreateByteField (BFWB, 0x24, FB5)
                             If ((SizeOf (Arg0) <= 0x25))
                             {
-                                If ((SMPR != 0x00))
+                                If ((SMPR != Zero))
                                 {
                                     FB1 = SMST /* \_SB_.PCI0.LPC0.H_EC.SMST */
                                 }
@@ -5493,7 +5505,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                     SMCD = FB3 /* \_SB_.PCI0.LPC0.H_EC.VPC0.MHPF.FB3_ */
                                     SMCN = FB5 /* \_SB_.PCI0.LPC0.H_EC.VPC0.MHPF.FB5_ */
                                     Local0 = FB0 /* \_SB_.PCI0.LPC0.H_EC.VPC0.MHPF.FB0_ */
-                                    If (((Local0 & 0x01) == 0x00))
+                                    If (((Local0 & One) == Zero))
                                     {
                                         SDAT = FB4A /* \_SB_.PCI0.LPC0.H_EC.VPC0.MHPF.FB4A */
                                         SDA2 = FB4B /* \_SB_.PCI0.LPC0.H_EC.VPC0.MHPF.FB4B */
@@ -5506,21 +5518,21 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                         SDAA = FB4I /* \_SB_.PCI0.LPC0.H_EC.VPC0.MHPF.FB4I */
                                     }
 
-                                    SMST = 0x00
+                                    SMST = Zero
                                     SMPR = FB0 /* \_SB_.PCI0.LPC0.H_EC.VPC0.MHPF.FB0_ */
-                                    Local1 = 0x00
+                                    Local1 = Zero
                                     While ((0x0A > Local1))
                                     {
-                                        Sleep (0x01)
+                                        Sleep (One)
                                         Local1++
-                                        If ((SMPR == 0x00))
+                                        If ((SMPR == Zero))
                                         {
                                             Break
                                         }
                                     }
 
                                     Local0 = FB0 /* \_SB_.PCI0.LPC0.H_EC.VPC0.MHPF.FB0_ */
-                                    If (((Local0 & 0x01) != 0x00))
+                                    If (((Local0 & One) != Zero))
                                     {
                                         FB4A = SDAT /* \_SB_.PCI0.LPC0.H_EC.SDAT */
                                         FB4B = SDA2 /* \_SB_.PCI0.LPC0.H_EC.SDA2 */
@@ -5536,7 +5548,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                     FB1 = SMST /* \_SB_.PCI0.LPC0.H_EC.SMST */
                                     If ((Local1 >= 0x0A))
                                     {
-                                        SMPR = 0x00
+                                        SMPR = Zero
                                         FB1 = 0x18
                                     }
                                 }
@@ -5550,10 +5562,10 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         Method (MHIF, 1, NotSerialized)
                         {
                             Name (BFWI, Buffer (0x0A){})
-                            CreateField (BFWI, 0x00, 0x10, RES)
+                            CreateField (BFWI, Zero, 0x10, RES)
                             CreateField (BFWI, 0x10, 0x40, ECI)
                             Local0 = Arg0
-                            If ((Local0 && 0x01))
+                            If ((Local0 && One))
                             {
                                 BFWI = Zero
                             }
@@ -5595,7 +5607,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         Method (GSBI, 0, Serialized)
                         {
                             Name (BATE, Buffer (0x53){})
-                            CreateField (BATE, 0x00, 0x10, BUF1)
+                            CreateField (BATE, Zero, 0x10, BUF1)
                             CreateField (BATE, 0x10, 0x10, BUF2)
                             CreateField (BATE, 0x20, 0x10, BUF3)
                             CreateField (BATE, 0x30, 0x10, BUF4)
@@ -5612,7 +5624,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             CreateField (BATE, 0x01A0, 0xB8, BUFF)
                             CreateField (BATE, 0x0258, 0x40, BUFG)
                             Name (CHEM, Buffer (0x08){})
-                            CreateField (CHEM, 0x00, 0x08, BCH1)
+                            CreateField (CHEM, Zero, 0x08, BCH1)
                             CreateField (CHEM, 0x08, 0x08, BCH2)
                             CreateField (CHEM, 0x10, 0x08, BCH3)
                             CreateField (CHEM, 0x18, 0x08, BCH4)
@@ -5621,7 +5633,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             Return (BATE) /* \_SB_.PCI0.LPC0.H_EC.VPC0.GSBI.BATE */
                         }
 
-                        Name (APDT, 0x00)
+                        Name (APDT, Zero)
                         Method (APPC, 1, Serialized)
                         {
                         }
@@ -5645,7 +5657,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                                 0x09, 
                                 0x06, 
                                 0x05, 
-                                0x00
+                                Zero
                             })
                         }
 
@@ -5655,7 +5667,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
                         Method (STHT, 1, Serialized)
                         {
-                            Return (0x00)
+                            Return (Zero)
                         }
                     }
 
@@ -5666,7 +5678,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
                     Method (_Q61, 0, NotSerialized)  // _Qxx: EC Query, xx=0x00-0xFF
                     {
-                        If ((PSD1 == 0x01))
+                        If ((PSD1 == One))
                         {
                             Notify (WMIU, 0xD0) // Hardware-Specific
                             Notify (WMIL, 0xD0) // Hardware-Specific
@@ -5693,27 +5705,27 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         })
                         Method (WMSK, 3, NotSerialized)
                         {
-                            If ((Arg1 == 0x01))
+                            If ((Arg1 == One))
                             {
-                                If ((ToInteger (Arg2) == 0x01))
+                                If ((ToInteger (Arg2) == One))
                                 {
                                     Return (0x02)
                                 }
                                 ElseIf ((ToInteger (Arg2) == 0x02))
                                 {
-                                    Return (0x01)
+                                    Return (One)
                                 }
                                 ElseIf ((ToInteger (Arg2) == 0x03))
                                 {
-                                    Return (0x01)
+                                    Return (One)
                                 }
                                 ElseIf ((ToInteger (Arg2) == 0x04))
                                 {
-                                    Return (0x01)
+                                    Return (One)
                                 }
                                 Else
                                 {
-                                    Return (0x00)
+                                    Return (Zero)
                                 }
                             }
                         }
@@ -6067,9 +6079,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             0x80000000, 
             0x80000000
         })
-        Name (DDB0, 0x00)
-        Name (DDB1, 0x00)
-        Name (DDB2, 0x00)
+        Name (DDB0, Zero)
+        Name (DDB1, Zero)
+        Name (DDB2, Zero)
     }
 
     Scope (_GPE)
@@ -6107,7 +6119,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         }
     }
 
-    OperationRegion (DBGB, SystemIO, 0x80, 0x01)
+    OperationRegion (DBGB, SystemIO, 0x80, One)
     Field (DBGB, ByteAcc, NoLock, Preserve)
     {
         P80B,   8
@@ -6375,7 +6387,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         {
              0x00                                             // .
         })
-        CreateDWordField (SVBF, 0x00, S0A4)
+        CreateDWordField (SVBF, Zero, S0A4)
         CreateDWordField (SVBF, 0x04, S0A8)
         CreateDWordField (SVBF, 0x08, S0B0)
         CreateDWordField (SVBF, 0x0C, S0D0)
@@ -6418,12 +6430,12 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
         Method (FRUI, 1, Serialized)
         {
-            If ((Arg0 == 0x00))
+            If ((Arg0 == Zero))
             {
                 Return (IUA0) /* \_SB_.IUA0 */
             }
 
-            If ((Arg0 == 0x01))
+            If ((Arg0 == One))
             {
                 Return (IUA1) /* \_SB_.IUA1 */
             }
@@ -6455,7 +6467,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             Local1 += 0xB000AF80
             Local1 += Arg0
             OP80 (Local1)
-            Local0 = (Arg0 << 0x01)
+            Local0 = (Arg0 << One)
             Local0 += 0xFED81E40
             OperationRegion (ADCR, SystemMemory, Local0, 0x02)
             Field (ADCR, ByteAcc, NoLock, Preserve)
@@ -6484,7 +6496,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             Local1 += 0xB000AF80
             Local1 += Arg0
             OP80 (Local1)
-            Local0 = (Arg0 << 0x01)
+            Local0 = (Arg0 << One)
             Local0 += 0xFED81E40
             OperationRegion (ADCR, SystemMemory, Local0, 0x02)
             Field (ADCR, ByteAcc, NoLock, Preserve)
@@ -6501,9 +6513,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             If ((Arg1 != ADTD))
             {
-                If ((Arg1 == 0x00))
+                If ((Arg1 == Zero))
                 {
-                    ADTD = 0x00
+                    ADTD = Zero
                     ADPD = One
                     Local0 = ADDS /* \_SB_.DSAD.ADDS */
                     While ((Local0 != 0x07))
@@ -6516,7 +6528,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 {
                     ADPD = Zero
                     Local0 = ADDS /* \_SB_.DSAD.ADDS */
-                    While ((Local0 != 0x00))
+                    While ((Local0 != Zero))
                     {
                         Local0 = ADDS /* \_SB_.DSAD.ADDS */
                     }
@@ -6528,7 +6540,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
         Method (HSAD, 2, Serialized)
         {
-            Local0 = (Arg0 << 0x01)
+            Local0 = (Arg0 << One)
             Local0 += 0xFED81E40
             OperationRegion (ADCR, SystemMemory, Local0, 0x02)
             Field (ADCR, ByteAcc, NoLock, Preserve)
@@ -6545,9 +6557,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             If ((Arg1 != ADTD))
             {
-                If ((Arg1 == 0x00))
+                If ((Arg1 == Zero))
                 {
-                    ADTD = 0x00
+                    ADTD = Zero
                     ADPD = One
                     Local0 = ADDS /* \_SB_.HSAD.ADDS */
                     While ((Local0 != 0x07))
@@ -6576,7 +6588,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
                     ADPD = Zero
                     Local0 = ADDS /* \_SB_.HSAD.ADDS */
-                    While ((Local0 != 0x00))
+                    While ((Local0 != Zero))
                     {
                         Local0 = ADDS /* \_SB_.HSAD.ADDS */
                     }
@@ -6606,7 +6618,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         Device (SPI1)
         {
             Name (_HID, "AMDI0060")  // _HID: Hardware ID
-            Name (_UID, 0x00)  // _UID: Unique ID
+            Name (_UID, Zero)  // _UID: Unique ID
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
                 If (SPIE)
@@ -6615,7 +6627,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -6645,7 +6657,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         {
                             If (Arg1)
                             {
-                                Stall (0x01)
+                                Stall (One)
                                 Local0 -= One
                                 If ((Local0 == Zero))
                                 {
@@ -6679,7 +6691,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         {
             Name (_HID, "AMDI0030")  // _HID: Hardware ID
             Name (_CID, "AMDI0030")  // _CID: Compatible ID
-            Name (_UID, 0x00)  // _UID: Unique ID
+            Name (_UID, Zero)  // _UID: Unique ID
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
             {
                 Name (RBUF, ResourceTemplate ()
@@ -6698,7 +6710,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             Method (RST, 0, NotSerialized)
             {
-                Notify (GPIO, 0x00) // Bus Check
+                Notify (GPIO, Zero) // Bus Check
             }
 
             Method (_STA, 0, NotSerialized)  // _STA: Status
@@ -6709,7 +6721,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
         }
@@ -6717,7 +6729,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         Device (FUR0)
         {
             Name (_HID, "AMDI0020")  // _HID: Hardware ID
-            Name (_UID, 0x00)  // _UID: Unique ID
+            Name (_UID, Zero)  // _UID: Unique ID
             Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
             {
                 IRQ (Edge, ActiveHigh, Exclusive, )
@@ -6739,17 +6751,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     {
                         If (UOL0)
                         {
-                            Return (0x00)
+                            Return (Zero)
                         }
 
                         Return (0x0F)
                     }
 
-                    Return (0x00)
+                    Return (Zero)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -6761,7 +6773,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -6769,7 +6781,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             {
                 If ((UT0D && UT0E))
                 {
-                    DSAD (0x0B, 0x00)
+                    DSAD (0x0B, Zero)
                 }
             }
 
@@ -6785,7 +6797,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         Device (FUR1)
         {
             Name (_HID, "AMDI0020")  // _HID: Hardware ID
-            Name (_UID, 0x01)  // _UID: Unique ID
+            Name (_UID, One)  // _UID: Unique ID
             Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
             {
                 IRQ (Edge, ActiveHigh, Exclusive, )
@@ -6807,17 +6819,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     {
                         If (UOL1)
                         {
-                            Return (0x00)
+                            Return (Zero)
                         }
 
                         Return (0x0F)
                     }
 
-                    Return (0x00)
+                    Return (Zero)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -6829,7 +6841,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -6837,7 +6849,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             {
                 If ((UT1D && UT1E))
                 {
-                    DSAD (0x0C, 0x00)
+                    DSAD (0x0C, Zero)
                 }
             }
 
@@ -6875,17 +6887,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     {
                         If (UOL2)
                         {
-                            Return (0x00)
+                            Return (Zero)
                         }
 
                         Return (0x0F)
                     }
 
-                    Return (0x00)
+                    Return (Zero)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -6897,7 +6909,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -6905,7 +6917,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             {
                 If ((UT2D && UT2E))
                 {
-                    DSAD (0x10, 0x00)
+                    DSAD (0x10, Zero)
                 }
             }
 
@@ -6943,17 +6955,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     {
                         If (UOL3)
                         {
-                            Return (0x00)
+                            Return (Zero)
                         }
 
                         Return (0x0F)
                     }
 
-                    Return (0x00)
+                    Return (Zero)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -6965,7 +6977,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -6973,7 +6985,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             {
                 If ((UT3D && UT3E))
                 {
-                    DSAD (0x1A, 0x00)
+                    DSAD (0x1A, Zero)
                 }
             }
 
@@ -6989,8 +7001,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         Device (I2CA)
         {
             Name (_HID, "AMDI0011")  // _HID: Hardware ID
-            Name (_UID, 0x00)  // _UID: Unique ID
-            Name (_ADR, 0x00)  // _ADR: Address
+            Name (_UID, Zero)  // _UID: Unique ID
+            Name (_ADR, Zero)  // _ADR: Address
             Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
             {
                 IRQ (Edge, ActiveHigh, Exclusive, )
@@ -7012,15 +7024,15 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     {
                         If ((NI2C == Zero))
                         {
-                            Return (0x00)
+                            Return (Zero)
                         }
                     }
 
-                    Return (0x00)
+                    Return (Zero)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -7033,8 +7045,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         Device (I2CB)
         {
             Name (_HID, "AMDI0011")  // _HID: Hardware ID
-            Name (_UID, 0x01)  // _UID: Unique ID
-            Name (_ADR, 0x01)  // _ADR: Address
+            Name (_UID, One)  // _UID: Unique ID
+            Name (_ADR, One)  // _ADR: Address
             Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
             {
                 IRQ (Edge, ActiveHigh, Exclusive, )
@@ -7056,15 +7068,15 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     {
                         If ((NI2C == Zero))
                         {
-                            Return (0x00)
+                            Return (Zero)
                         }
                     }
 
-                    Return (0x00)
+                    Return (Zero)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -7096,11 +7108,11 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         Return (0x0F)
                     }
 
-                    Return (0x00)
+                    Return (Zero)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -7117,7 +7129,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -7125,7 +7137,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             {
                 If ((IC2D && IC2E))
                 {
-                    DSAD (0x07, 0x00)
+                    DSAD (0x07, Zero)
                 }
             }
 
@@ -7160,11 +7172,11 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         Return (0x0F)
                     }
 
-                    Return (0x00)
+                    Return (Zero)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -7175,28 +7187,37 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             Method (_S0W, 0, NotSerialized)  // _S0W: S0 Device Wake State
             {
-                // Fix ELAN0643: forcer D0 en S0, interdire D3hot runtime PM
-                Return (0x00)
+                If ((IC3D && IC3E))
+                {
+                    Return (0x04)
+                }
+                Else
+                {
+                    Return (Zero)
+                }
             }
 
             Method (_PS0, 0, NotSerialized)  // _PS0: Power State 0
             {
                 If ((IC3D && IC3E))
                 {
-                    DSAD (0x08, 0x00)
+                    DSAD (0x08, Zero)
                 }
             }
 
             Method (_PS3, 0, NotSerialized)  // _PS3: Power State 3
             {
-                // Fix ELAN0643: neutralisé — empêche la mise en D3hot du contrôleur I2CD
+                If ((IC3D && IC3E))
+                {
+                    DSAD (0x08, 0x03)
+                }
             }
         }
 
         Device (I2CE)
         {
             Name (_HID, "AMDI0010")  // _HID: Hardware ID
-            Name (_UID, 0x00)  // _UID: Unique ID
+            Name (_UID, Zero)  // _UID: Unique ID
             Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
             {
                 IRQ (Edge, ActiveHigh, Exclusive, )
@@ -7218,11 +7239,11 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         }
                     }
 
-                    Return (0x00)
+                    Return (Zero)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -7235,7 +7256,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         Device (I2CF)
         {
             Name (_HID, "AMDI0010")  // _HID: Hardware ID
-            Name (_UID, 0x01)  // _UID: Unique ID
+            Name (_UID, One)  // _UID: Unique ID
             Name (_CRS, ResourceTemplate ()  // _CRS: Current Resource Settings
             {
                 IRQ (Edge, ActiveHigh, Exclusive, )
@@ -7257,11 +7278,11 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         }
                     }
 
-                    Return (0x00)
+                    Return (Zero)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -7282,7 +7303,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             IM69 = One
             IM6A = One
             IM6B = One
-            If ((EMMD != 0x01))
+            If ((EMMD != One))
             {
                 IM4A = One
                 IM58 = One
@@ -7349,12 +7370,12 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         {
             Method (_HID, 0, Serialized)  // _HID: Hardware ID
             {
-                If ((EMMD == 0x00))
+                If ((EMMD == Zero))
                 {
                     Return (AHID) /* \_SB_.AHID */
                 }
 
-                If ((EMMD == 0x01))
+                If ((EMMD == One))
                 {
                     Return (SHID) /* \_SB_.SHID */
                 }
@@ -7369,12 +7390,12 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             Method (_CID, 0, Serialized)  // _CID: Compatible ID
             {
-                If ((EMMD == 0x00))
+                If ((EMMD == Zero))
                 {
                     Return (ACID) /* \_SB_.ACID */
                 }
 
-                If ((EMMD == 0x01))
+                If ((EMMD == One))
                 {
                     Return (SCID) /* \_SB_.SCID */
                 }
@@ -7387,12 +7408,12 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 Return (Zero)
             }
 
-            Name (_UID, 0x00)  // _UID: Unique ID
+            Name (_UID, Zero)  // _UID: Unique ID
             Method (_CRS, 0, Serialized)  // _CRS: Current Resource Settings
             {
                 If (EMD3)
                 {
-                    If ((EMMD == 0x01))
+                    If ((EMMD == One))
                     {
                         Return (DCRS) /* \_SB_.DCRS */
                     }
@@ -7414,11 +7435,11 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                         Return (0x0F)
                     }
 
-                    Return (0x00)
+                    Return (Zero)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -7438,7 +7459,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -7446,7 +7467,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             {
                 If ((EMD3 && EMME))
                 {
-                    HSAD (0x1C, 0x00)
+                    HSAD (0x1C, Zero)
                     RECR ()
                 }
             }
@@ -7464,9 +7485,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 Name (_ADR, Zero)  // _ADR: Address
                 Method (_RMV, 0, NotSerialized)  // _RMV: Removal Status
                 {
-                    If ((EMMD == 0x01))
+                    If ((EMMD == One))
                     {
-                        If ((SDMC == 0x01))
+                        If ((SDMC == One))
                         {
                             Return (Zero)
                         }
@@ -7494,7 +7515,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Return (0x0F)
                 }
 
-                Return (0x00)
+                Return (Zero)
             }
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
@@ -7532,7 +7553,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Return (0x0F)
                 }
 
-                Return (0x00)
+                Return (Zero)
             }
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
@@ -7570,7 +7591,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Return (0x0F)
                 }
 
-                Return (0x00)
+                Return (Zero)
             }
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
@@ -7600,7 +7621,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         {
             Name (_HID, EisaId ("PNP0501") /* 16550A-compatible COM Serial Port */)  // _HID: Hardware ID
             Name (_DDN, "COM1")  // _DDN: DOS Device Name
-            Name (_UID, 0x01)  // _UID: Unique ID
+            Name (_UID, One)  // _UID: Unique ID
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
                 If ((IER3 && (AMTD != 0x03)))
@@ -7608,7 +7629,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     Return (0x0F)
                 }
 
-                Return (0x00)
+                Return (Zero)
             }
 
             Method (_CRS, 0, NotSerialized)  // _CRS: Current Resource Settings
@@ -7655,19 +7676,15 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         DCMS,   8
     }
 
-    Name (CDAT, 0x00)
+    Name (CDAT, Zero)
     Scope (_SB.I2CD)
     {
         Device (TPD0)
         {
             Name (_HID, "ELAN0643")  // _HID: Hardware ID
             Name (_CID, "PNP0C50" /* HID Protocol Device (I2C bus) */)  // _CID: Compatible ID
-            Name (_DEP, Package (0x01)  // _DEP: Dependencies — Fix ELAN0643: forcer probe après GPIO
-            {
-                \_SB.GPIO
-            })
             ICMS = 0x0A
-            DCMS = 0x01
+            DCMS = One
             ICMS = 0x20
             CDAT = DCMS /* \DCMS */
             If ((CDAT == 0x02))
@@ -7675,16 +7692,16 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 _HID = "SYNA2392"
             }
 
-            If ((CDAT == 0x01))
+            If ((CDAT == One))
             {
                 _HID = "ELAN0643"
             }
 
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
-                If ((CDAT == 0x00))
+                If ((CDAT == Zero))
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
                 Else
                 {
@@ -7698,20 +7715,20 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 {
                     Switch (ToInteger (Arg2))
                     {
-                        Case (0x00)
+                        Case (Zero)
                         {
                             Switch (ToInteger (Arg1))
                             {
-                                Case (0x01)
+                                Case (One)
                                 {
-                                    Return (Buffer (0x01)
+                                    Return (Buffer (One)
                                     {
                                          0x03                                             // .
                                     })
                                 }
                                 Default
                                 {
-                                    Return (Buffer (0x01)
+                                    Return (Buffer (One)
                                     {
                                          0x00                                             // .
                                     })
@@ -7719,28 +7736,27 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
                             }
                         }
-                        Case (0x01)
+                        Case (One)
                         {
-                            If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x01))
+                            If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == One))
                             {
-                                Return (0x01)
+                                Return (One)
                             }
-							Else
-                            //If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x02))
+                            Else
                             {
                                 Return (0x20)
                             }
                         }
                         Default
                         {
-                            Return (0x00)
+                            Return (Zero)
                         }
 
                     }
                 }
                 Else
                 {
-                    Return (Buffer (0x01)
+                    Return (Buffer (One)
                     {
                          0x00                                             // .
                     })
@@ -7758,7 +7774,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                             0x0009
                         }
                 })
-                If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x01))
+                If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == One))
                 {
                     Name (SBFB, ResourceTemplate ()
                     {
@@ -7769,8 +7785,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                     })
                     Return (ConcatenateResTemplate (SBFB, SBFG))
                 }
-				Else
-                //If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x02))
+                Else
                 {
                     Name (SBFC, ResourceTemplate ()
                     {
@@ -7792,11 +7807,11 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             Name (HID2, Zero)
             Name (_HID, "ELAN238E")  // _HID: Hardware ID
             Name (_CID, "PNP0C50" /* HID Protocol Device (I2C bus) */)  // _CID: Compatible ID
-            Name (_HRV, 0x01)  // _HRV: Hardware Revision
+            Name (_HRV, One)  // _HRV: Hardware Revision
             Name (_S0W, 0x04)  // _S0W: S0 Device Wake State
-            Name (CDAT, 0x00)
+            Name (CDAT, Zero)
             ICMS = 0x0A
-            DCMS = 0x01
+            DCMS = One
             ICMS = 0x21
             CDAT = DCMS /* \DCMS */
             Name (SBFB, ResourceTemplate ()
@@ -7828,13 +7843,13 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             Method (_STA, 0, NotSerialized)  // _STA: Status
             {
-                If (((CDAT == 0x01) || (CDAT == 0x02)))
+                If (((CDAT == One) || (CDAT == 0x02)))
                 {
                     Return (0x0F)
                 }
                 Else
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
             }
 
@@ -7859,11 +7874,11 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 {
                     Switch (ToInteger (Arg2))
                     {
-                        Case (0x00)
+                        Case (Zero)
                         {
                             Switch (ToInteger (Arg1))
                             {
-                                Case (0x01)
+                                Case (One)
                                 {
                                     Debug = "Method _DSM Function Query"
                                     Return (Buffer (One)
@@ -7881,14 +7896,14 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
                             }
                         }
-                        Case (0x01)
+                        Case (One)
                         {
                             Debug = "Method _DSM Function HID"
-                            Return (0x01)
+                            Return (One)
                         }
                         Default
                         {
-                            Return (0x00)
+                            Return (Zero)
                         }
 
                     }
@@ -7931,10 +7946,10 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             Method (_PS0, 0, Serialized)  // _PS0: Power State 0
             {
-                O069 = 0x00
+                O069 = Zero
                 Sleep (0x0A)
                 Sleep (0x1E)
-                O069 = 0x01
+                O069 = One
                 Sleep (0x9B)
             }
         }
@@ -7994,7 +8009,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         }
     }
 
-    OperationRegion (SMI0, SystemIO, 0xB0, 0x01)
+    OperationRegion (SMI0, SystemIO, 0xB0, One)
     Field (SMI0, ByteAcc, NoLock, Preserve)
     {
         APMW,   8
@@ -8004,7 +8019,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
     {
         Name (_HID, EisaId ("PNP0C14") /* Windows Management Instrumentation Device */)  // _HID: Hardware ID
         Name (_CID, "LBGNB")  // _CID: Compatible ID
-        Name (_UID, 0x01)  // _UID: Unique ID
+        Name (_UID, One)  // _UID: Unique ID
         Name (_WDG, Buffer (0xB4)
         {
             /* 0000 */  0x0E, 0x23, 0xF5, 0x51, 0x77, 0x96, 0xCD, 0x46,  // .#.Qw..F
@@ -8043,13 +8058,13 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         {
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "USBLegacy"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "WirelessLAN"
             }, 
 
@@ -8061,49 +8076,49 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "PowerBeep"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "AMDVTMTechnology"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "BiosBackFlash"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "HotkeyMode"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "FastBoot"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "IntelHyperThreading"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "Reserved"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "AMDPlatformSecurityProcessor"
             }, 
 
@@ -8115,13 +8130,13 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             Package (0x02)
             {
-                0x01, 
+                One, 
                 "IntelSGXControl"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "SecureBoot"
             }, 
 
@@ -8139,7 +8154,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "SecurityChip"
             }, 
 
@@ -8151,7 +8166,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "PowerOnPassword"
             }, 
 
@@ -8175,49 +8190,49 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "USBBoot"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "ESATABoot"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "PxeBootToLAN"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "FoolProofFnCtrl"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "AlwaysOnUsb"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "ChargeInBattery"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "Reserved"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "Reserved"
             }, 
 
@@ -8235,109 +8250,109 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "EthernetLAN"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "WirelessWAN"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "Bluetooth"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "USBPort"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "MemoryCardSlot"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "SmartCardSlot"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "IntegratedCamera"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "Microphone"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "FingerprintReader"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "Thunderbolt"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "NFC"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "FlipBoot"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "Reserved"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "Reserved"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "Reserved"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "Reserved"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "Reserved"
             }, 
 
             Package (0x02)
             {
-                0x00, 
+                Zero, 
                 "Reserved"
             }
         })
@@ -8433,20 +8448,20 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         Mutex (MWMI, 0x00)
         Name (PCFG, Buffer (0x18){})
         Name (IBUF, Buffer (0x0100){})
-        Name (ILEN, 0x00)
+        Name (ILEN, Zero)
         Name (PSTR, Buffer (0x81){})
         Method (WQA0, 1, NotSerialized)
         {
             Acquire (MWMI, 0xFFFF)
-            If ((WMIS (0x00, Arg0) != 0x00))
+            If ((WMIS (Zero, Arg0) != Zero))
             {
                 Release (MWMI)
                 Return ("")
             }
 
             Local0 = DerefOf (ITEM [WITM])
-            Local1 = DerefOf (Local0 [0x00])
-            Local2 = DerefOf (Local0 [0x01])
+            Local1 = DerefOf (Local0 [Zero])
+            Local2 = DerefOf (Local0 [One])
             If ((Local1 < 0x64))
             {
                 Concatenate (Local2, ",", Local6)
@@ -8549,12 +8564,12 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
         Method (GITM, 2, NotSerialized)
         {
-            Local0 = 0x00
+            Local0 = Zero
             Local1 = SizeOf (Arg1)
             While ((Local0 < Local1))
             {
-                Local3 = DerefOf (DerefOf (Arg1 [Local0]) [0x01])
-                If (SCMP (Local3, Arg0, 0x00))
+                Local3 = DerefOf (DerefOf (Arg1 [Local0]) [One])
+                If (SCMP (Local3, Arg0, Zero))
                 {
                     Return (Local0)
                 }
@@ -8567,7 +8582,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
         Method (GSEL, 3, NotSerialized)
         {
-            Local0 = 0x00
+            Local0 = Zero
             Local1 = SizeOf (Arg0)
             While ((Local0 < Local1))
             {
@@ -8591,20 +8606,20 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
         Method (CLRP, 0, NotSerialized)
         {
-            WPAS = 0x00
-            WPNW = 0x00
+            WPAS = Zero
+            WPNW = Zero
         }
 
         Method (GPAS, 2, NotSerialized)
         {
             Local0 = Arg1
-            Local1 = 0x00
+            Local1 = Zero
             While ((Local1 <= 0x80))
             {
                 Local2 = DerefOf (Arg0 [Local0])
-                If (((Local2 == 0x2C) || (Local2 == 0x00)))
+                If (((Local2 == 0x2C) || (Local2 == Zero)))
                 {
-                    PSTR [Local1] = 0x00
+                    PSTR [Local1] = Zero
                     Return (Local1)
                 }
 
@@ -8613,7 +8628,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 Local1++
             }
 
-            PSTR [Local1] = 0x00
+            PSTR [Local1] = Zero
             Return (Ones)
         }
 
@@ -8627,7 +8642,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 Return (0x02)
             }
 
-            If ((Local1 == 0x00))
+            If ((Local1 == Zero))
             {
                 Return (0x02)
             }
@@ -8642,9 +8657,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             }
 
             WENC = Local6
-            If ((Local6 == 0x00))
+            If ((Local6 == Zero))
             {
-                Local0 += SLEN (PENC, 0x00)
+                Local0 += SLEN (PENC, Zero)
                 If ((DerefOf (Arg0 [Local0]) != 0x2C))
                 {
                     Return (0x02)
@@ -8660,13 +8675,13 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 WKBD = Local6
             }
 
-            Return (0x00)
+            Return (Zero)
         }
 
         Method (SPAS, 1, NotSerialized)
         {
             CLRP ()
-            Local6 = GSEL (PTYP, Arg0, 0x00)
+            Local6 = GSEL (PTYP, Arg0, Zero)
             If ((Local6 == Ones))
             {
                 Return (0x02)
@@ -8681,7 +8696,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             Local0++
             Local1 = GPAS (Arg0, Local0)
-            If (((Local1 == Ones) || (Local1 == 0x00)))
+            If (((Local1 == Ones) || (Local1 == Zero)))
             {
                 Return (0x02)
             }
@@ -8700,9 +8715,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 Return (0x02)
             }
 
-            If ((Local1 == 0x00))
+            If ((Local1 == Zero))
             {
-                PSTR = 0x00
+                PSTR = Zero
             }
 
             WPNW = PSTR /* \WMI1.PSTR */
@@ -8715,9 +8730,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             }
 
             WENC = Local6
-            If ((Local6 == 0x00))
+            If ((Local6 == Zero))
             {
-                Local0 += SLEN (PENC, 0x00)
+                Local0 += SLEN (PENC, Zero)
                 If ((DerefOf (Arg0 [Local0]) != 0x2C))
                 {
                     Return (0x02)
@@ -8733,7 +8748,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 WKBD = Local6
             }
 
-            Return (0x00)
+            Return (Zero)
         }
 
         Method (WSET, 2, NotSerialized)
@@ -8748,10 +8763,10 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
             WITM = Local1
             Local3 = DerefOf (Arg0 [Local1])
-            Local4 = DerefOf (Local3 [0x01])
+            Local4 = DerefOf (Local3 [One])
             Local2 = SizeOf (Local4)
             Local2++
-            Local4 = DerefOf (Local3 [0x00])
+            Local4 = DerefOf (Local3 [Zero])
             If ((Local4 < 0x64))
             {
                 Local5 = DerefOf (Arg1 [Local4])
@@ -8977,31 +8992,31 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             {
                 Local2++
                 Local0 = CPAS (IBUF, Local2)
-                If ((Local0 != 0x00))
+                If ((Local0 != Zero))
                 {
                     Return (Local0)
                 }
             }
 
-            Return (0x00)
+            Return (Zero)
         }
 
         Method (WMA1, 3, NotSerialized)
         {
             Acquire (MWMI, 0xFFFF)
-            If ((SizeOf (Arg2) == 0x00))
+            If ((SizeOf (Arg2) == Zero))
             {
                 Local0 = 0x02
             }
             Else
             {
                 Local0 = CARG (Arg2)
-                If ((Local0 == 0x00))
+                If ((Local0 == Zero))
                 {
                     Local0 = WSET (ITEM, VSEL)
-                    If ((Local0 == 0x00))
+                    If ((Local0 == Zero))
                     {
-                        Local0 = WMIS (0x01, 0x00)
+                        Local0 = WMIS (One, Zero)
                     }
                 }
             }
@@ -9014,16 +9029,16 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         {
             Acquire (MWMI, 0xFFFF)
             Local0 = CARG (Arg2)
-            If ((Local0 == 0x00))
+            If ((Local0 == Zero))
             {
-                If ((ILEN != 0x00))
+                If ((ILEN != Zero))
                 {
-                    Local0 = CPAS (IBUF, 0x00)
+                    Local0 = CPAS (IBUF, Zero)
                 }
 
-                If ((Local0 == 0x00))
+                If ((Local0 == Zero))
                 {
-                    Local0 = WMIS (0x02, 0x00)
+                    Local0 = WMIS (0x02, Zero)
                 }
             }
 
@@ -9035,16 +9050,16 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         {
             Acquire (MWMI, 0xFFFF)
             Local0 = CARG (Arg2)
-            If ((Local0 == 0x00))
+            If ((Local0 == Zero))
             {
-                If ((ILEN != 0x00))
+                If ((ILEN != Zero))
                 {
-                    Local0 = CPAS (IBUF, 0x00)
+                    Local0 = CPAS (IBUF, Zero)
                 }
 
-                If ((Local0 == 0x00))
+                If ((Local0 == Zero))
                 {
-                    Local0 = WMIS (0x03, 0x00)
+                    Local0 = WMIS (0x03, Zero)
                 }
             }
 
@@ -9056,16 +9071,16 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         {
             Acquire (MWMI, 0xFFFF)
             Local0 = CARG (Arg2)
-            If ((Local0 == 0x00))
+            If ((Local0 == Zero))
             {
-                If ((ILEN != 0x00))
+                If ((ILEN != Zero))
                 {
-                    Local0 = CPAS (IBUF, 0x00)
+                    Local0 = CPAS (IBUF, Zero)
                 }
 
-                If ((Local0 == 0x00))
+                If ((Local0 == Zero))
                 {
-                    Local0 = WMIS (0x04, 0x00)
+                    Local0 = WMIS (0x04, Zero)
                 }
             }
 
@@ -9076,8 +9091,8 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         Method (WQA5, 1, NotSerialized)
         {
             Acquire (MWMI, 0xFFFF)
-            Local0 = WMIS (0x05, 0x00)
-            PCFG [0x00] = WSPM /* \WSPM */
+            Local0 = WMIS (0x05, Zero)
+            PCFG [Zero] = WSPM /* \WSPM */
             PCFG [0x04] = WSPS /* \WSPS */
             PCFG [0x08] = WSMN /* \WSMN */
             PCFG [0x0C] = WSMX /* \WSMX */
@@ -9090,23 +9105,23 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         Method (WMA6, 3, NotSerialized)
         {
             Acquire (MWMI, 0xFFFF)
-            If ((SizeOf (Arg2) == 0x00))
+            If ((SizeOf (Arg2) == Zero))
             {
                 Local0 = 0x02
             }
             Else
             {
                 Local0 = CARG (Arg2)
-                If ((Local0 == 0x00))
+                If ((Local0 == Zero))
                 {
-                    If ((ILEN != 0x00))
+                    If ((ILEN != Zero))
                     {
                         Local0 = SPAS (IBUF)
                     }
 
-                    If ((Local0 == 0x00))
+                    If ((Local0 == Zero))
                     {
-                        Local0 = WMIS (0x06, 0x00)
+                        Local0 = WMIS (0x06, Zero)
                     }
                 }
             }
@@ -9117,13 +9132,13 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
         Method (WMA7, 3, NotSerialized)
         {
-            If ((SizeOf (Arg2) == 0x00))
+            If ((SizeOf (Arg2) == Zero))
             {
                 Return ("")
             }
 
             Local0 = CARG (Arg2)
-            If ((Local0 == 0x00))
+            If ((Local0 == Zero))
             {
                 Local1 = GITM (IBUF, ITEM)
                 If ((Local1 == Ones))
@@ -9132,17 +9147,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 }
 
                 Local0 = DerefOf (ITEM [Local1])
-                Local1 = DerefOf (Local0 [0x00])
+                Local1 = DerefOf (Local0 [Zero])
                 If ((Local1 < 0x64))
                 {
                     Local3 = DerefOf (VSEL [Local1])
-                    Local2 = DerefOf (Local3 [0x00])
+                    Local2 = DerefOf (Local3 [Zero])
                     Local4 = SizeOf (Local3)
-                    Local5 = 0x01
+                    Local5 = One
                     While ((Local5 < Local4))
                     {
                         Local6 = DerefOf (Local3 [Local5])
-                        If ((SizeOf (Local6) != 0x00))
+                        If ((SizeOf (Local6) != Zero))
                         {
                             Concatenate (Local2, ",", Local7)
                             Concatenate (Local7, Local6, Local2)
@@ -9153,9 +9168,9 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 }
                 Else
                 {
-                    Local2 = DerefOf (VLST [0x00])
+                    Local2 = DerefOf (VLST [Zero])
                     Local4 = SizeOf (VLST)
-                    Local5 = 0x01
+                    Local5 = One
                     While ((Local5 < Local4))
                     {
                         Local6 = DerefOf (VLST [Local5])
@@ -9172,11 +9187,11 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         Method (CARG, 1, NotSerialized)
         {
             Local0 = SizeOf (Arg0)
-            If ((Local0 == 0x00))
+            If ((Local0 == Zero))
             {
-                IBUF = 0x00
-                ILEN = 0x00
-                Return (0x00)
+                IBUF = Zero
+                ILEN = Zero
+                Return (Zero)
             }
 
             If ((ObjectType (Arg0) != 0x02))
@@ -9194,7 +9209,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             Local1 = DerefOf (IBUF [Local0])
             If (((Local1 == 0x3B) || (Local1 == 0x2A)))
             {
-                IBUF [Local0] = 0x00
+                IBUF [Local0] = Zero
                 ILEN = Local0
             }
             Else
@@ -9202,22 +9217,22 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 ILEN = SizeOf (Arg0)
             }
 
-            Return (0x00)
+            Return (Zero)
         }
 
         Method (SCMP, 3, Serialized)
         {
             Local0 = SizeOf (Arg0)
-            If ((Local0 == 0x00))
+            If ((Local0 == Zero))
             {
-                Return (0x00)
+                Return (Zero)
             }
 
             Local0++
             Name (STR1, Buffer (Local0){})
             STR1 = Arg0
             Local0--
-            Local1 = 0x00
+            Local1 = Zero
             Local2 = Arg2
             While ((Local1 < Local0))
             {
@@ -9225,7 +9240,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
                 Local4 = DerefOf (Arg1 [Local2])
                 If ((Local3 != Local4))
                 {
-                    Return (0x00)
+                    Return (Zero)
                 }
 
                 Local1++
@@ -9233,17 +9248,17 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
             }
 
             Local4 = DerefOf (Arg1 [Local2])
-            If ((Local4 == 0x00))
+            If ((Local4 == Zero))
             {
-                Return (0x01)
+                Return (One)
             }
 
             If (((Local4 == 0x2C) || (Local4 == 0x3A)))
             {
-                Return (0x01)
+                Return (One)
             }
 
-            Return (0x00)
+            Return (Zero)
         }
 
         Name (WQBA, Buffer (0x089D)
@@ -9529,24 +9544,24 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
 
     Method (WMIS, 2, NotSerialized)
     {
-        Return (SMI (0x10, Arg0, Arg1, 0x00, 0x00))
+        Return (SMI (0x10, Arg0, Arg1, Zero, Zero))
     }
 
     Mutex (MSMI, 0x00)
     Method (SMI, 5, Serialized)
     {
         Acquire (MSMI, 0xFFFF)
-        Local0 = 0x00
+        Local0 = Zero
         CMD = Arg0
-        ERR = 0x01
+        ERR = One
         PAR0 = Arg1
         PAR1 = Arg2
         PAR2 = Arg3
         PAR3 = Arg4
         APMW = 0xF5
-        While ((ERR == 0x01))
+        While ((ERR == One))
         {
-            Sleep (0x01)
+            Sleep (One)
             APMW = 0xF5
         }
 
@@ -9555,7 +9570,7 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         Return (Local0)
     }
 
-    OperationRegion (MNVS, SystemMemory, 0xCE39F018, 0x1000)
+    OperationRegion (MNVS, SystemMemory, 0xCE3A8018, 0x1000)
     Field (MNVS, ByteAcc, NoLock, Preserve)
     {
         Offset (0xB00), 
@@ -9603,3 +9618,4 @@ DefinitionBlock ("", "DSDT", 1, "LENOVO", "AMD", 0x00001000)
         PAR3,   32
     }
 }
+
