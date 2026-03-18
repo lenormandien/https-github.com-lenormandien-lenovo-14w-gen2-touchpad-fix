@@ -13,6 +13,7 @@ On corrige la table ACPI, puis on demande à Linux de l'utiliser à la place de 
 ## Installation rapide
 
 ```bash
+sudo apt install git 
 git clone https://github.com/lenormandien/lenovo-14w-gen2-touchpad-fix.git
 cd lenovo-14w-gen2-touchpad-fix
 sudo bash fix-touchpad-lenovo-14w.sh
