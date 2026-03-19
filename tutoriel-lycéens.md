@@ -1,182 +1,212 @@
-# Correctif touchpad sur Lenovo 14w Gen 2 sous Linux
+# 🖱️ Lenovo 14w Gen 2 — Touchpad Fix (ELAN0643 / I2C)
 
-> 📄 **Source originale :** [cg666 sur GitHub Gist](https://github.com/lenormandien/lenovo-14w-gen2-touchpad-fix)
-> Ce document est une version en français, corrigée et enrichie, du tutoriel original.
-
-## C'est quoi le problème ?
-
-Sur le laptop Lenovo 14w Gen 2, le touchpad (référence ELAN0643) ne fonctionne pas sous Linux.
-
-La cause : le fichier **ACPI DSDT**, un fichier de configuration bas-niveau qui décrit le matériel à l'OS (le système d'exploitation), contient une erreur de logique. Linux lit ce fichier au démarrage et en déduit — à tort — que le touchpad n'est pas là.
-
-La solution : on va corriger ce fichier, puis demander à Linux de l'utiliser à la place de celui du BIOS.
-
-**Toutes les commandes sont à exécuter en tant que root** (administrateur). Tu peux utiliser `sudo su` pour passer root, ou préfixer chaque commande par `sudo`.
-
+> Correctif DSDT + service systemd pour faire fonctionner le touchpad ELAN0643 sous Linux (testé sur **Linux Mint**).
 
 ---
 
-## Étape 0 — Installer les outils nécessaires
+## Le problème
 
-```
-$ apt install acpica-tools acpidump cpio
-```
+Sur le **Lenovo 14w Gen 2**, le touchpad ELAN0643 est connecté via I2C mais ne fonctionne pas sous Linux avec le DSDT d'origine. La cause est un bug dans la table ACPI (DSDT) du firmware : la méthode `_CRS` du périphérique touchpad ne retourne aucune ressource I2C dans certains cas, ce qui empêche le driver `elan_i2c` de s'initialiser.
 
-- **acpidump** : extrait les tables ACPI du BIOS
-- **iasl** (inclus dans acpica-tools) : traduit ces tables dans un format lisible et modifiable
-- **cpio** : crée une archive qui sera chargée au démarrage
+### Cause exacte
 
----
+La variable `TPTY` (Touchpad Type), lue depuis l'Embedded Controller, détermine quelle adresse I2C est assignée au touchpad :
 
-## Étape 1 — Extraire et décompiler les tables ACPI
+| Valeur de `TPTY` | DSDT original | DSDT corrigé |
+|:---:|:---:|:---:|
+| `0x01` | I2C `0x0015` ✅ | I2C `0x0015` ✅ |
+| `0x02` | I2C `0x002C` ✅ | I2C `0x002C` ✅ |
+| autre  | **Rien** ❌ | I2C `0x002C` ✅ |
 
-```
-$ mkdir -p acpi/dat
-$ mkdir -p acpi/dsl
-$ cd acpi/dat
-$ acpidump -b
-$ iasl -d *.dat
-$ mv *.dsl ../dsl
-$ cd ../../
-```
-
-**Ce que font ces commandes :**
-- On crée deux dossiers : `dat` pour les fichiers bruts, `dsl` pour les fichiers lisibles
-- `acpidump -b` extrait toutes les tables ACPI du BIOS sous forme de fichiers binaires (`.dat`)
-- `iasl -d *.dat` traduit ces fichiers binaires en code source lisible (`.dsl`) — c'est la "décompilation"
-- On déplace les fichiers `.dsl` dans le bon dossier
+Sous Linux, `TPTY` n'est pas initialisée à `0x01` ou `0x02` au moment de l'évaluation ACPI → aucune ressource assignée → touchpad ignoré.
 
 ---
 
-## Étape 2 — Modifier le fichier `dsdt.dsl`
+## Correctifs appliqués
 
-Ouvre le fichier `acpi/dsl/dsdt.dsl` avec un éditeur de texte (par exemple `nano` ou `gedit`).
+| # | Emplacement | Correctif |
+|---|---|---|
+| 1 | `ELAN0643._DSM` | `If (TPTY == 0x02)` → `Else` |
+| 2 | `ELAN0643._CRS` | `If (TPTY == 0x02)` → `Else` |
+| 3 | `I2CD._S0W` | `Return (0x04)` → `Return (0x00)` (force D0) |
+| 4 | `I2CD._PS3` | `DSAD(0x08, 0x03)` → neutralisé |
 
-On va corriger **deux endroits** dans ce fichier.
-
----
-
-### Correction 1 — La méthode `_DSM`
-
-Cherche ce bloc (repère-toi avec `ELAN0643` et `Case (0x01)`) :
-
-```
-                        Case (0x01)
-                        {
-                            If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x01))
-                            {
-                                Return (0x01)
-                            }
-
-                            If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x02))
-                            {
-                                Return (0x20)
-                            }
-```
-
-**Remplace-le par :**
-
-```
-                        Case (0x01)
-                        {
-                            If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x01))
-                            {
-                                Return (0x01)
-                            }
-                            Else
-                            // If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x02))
-                            {
-                                Return (0x20)
-                            }
-```
-
-**Pourquoi ?** Le code original vérifie si une valeur vaut `0x01`, puis indépendamment si elle vaut `0x02`. Sur ce laptop, la valeur ne correspond à aucun des deux cas, donc rien n'est retourné. En ajoutant `Else`, on dit : "si ce n'est pas `0x01`, prends quand même le chemin `0x02`", ce qui active le touchpad.
+En complément, un **service systemd** force le contrôleur I2C (`AMDI0010:01`) à rester en état D0 (actif) et déclenche le probe du touchpad au démarrage.
 
 ---
 
-### Correction 2 — La méthode `_CRS`
+## Prérequis
 
-Un peu plus bas, cherche ce bloc (repère-toi avec `_CRS: Current Resource Settings`) :
+- Linux Mint (ou toute distro Debian/Ubuntu avec GRUB)
+- Accès root
+- Le fichier `dsdt.dsl` **déjà patché** dans le répertoire courant
 
-```
-                If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x01))
-                {
-                    ...
-                    Return (ConcatenateResTemplate (SBFB, SBFG))
-                }
-                If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x02))
-                {
-                    ...
-                    Return (ConcatenateResTemplate (SBFC, SBFG))
-                }
-```
-
-**Remplace le second `If` par `Else` (et mets l'ancien `If` en commentaire) :**
+### Outils installés automatiquement si absents
 
 ```
-                If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x01))
-                {
-                    Name (SBFB, ResourceTemplate ()
-                    {
-                        I2cSerialBusV2 (0x0015, ControllerInitiated, 0x00061A80,
-                            AddressingMode7Bit, "\\_SB.I2CD",
-                            0x00, ResourceConsumer, , Exclusive,
-                            )
-                    })
-                    Return (ConcatenateResTemplate (SBFB, SBFG))
-                }
-                Else
-                // If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x02))
-                {
-                    Name (SBFC, ResourceTemplate ()
-                    {
-                        I2cSerialBusV2 (0x002C, ControllerInitiated, 0x00061A80,
-                            AddressingMode7Bit, "\\_SB.I2CD",
-                            0x00, ResourceConsumer, , Exclusive,
-                            )
-                    })
-                    Return (ConcatenateResTemplate (SBFC, SBFG))
-                }
+acpica-tools   (iasl)
+cpio
+grub-common    (update-grub)
 ```
-
-**Pourquoi ?** Même logique : on force Linux à utiliser l'adresse I2C `0x002C` (celle du touchpad ELAN0643) même si la détection automatique échoue.
 
 ---
 
-## Étape 3 — Recompiler et appliquer le correctif
+## Installation
 
-Depuis le dossier qui contient `acpi/` (là où tu t'étais mis au départ) :
+### 1. Obtenir le DSDT original
 
+```bash
+# Extraire le DSDT du firmware en cours
+sudo cat /sys/firmware/acpi/tables/DSDT > dsdt.dat
+
+# Décompiler
+iasl -d dsdt.dat
+# → génère dsdt.dsl
 ```
-$ mkdir -p kernel/firmware/acpi
-$ cp acpi/dsl/dsdt.dsl ./
-$ iasl -sa dsdt.dsl
-$ cp dsdt.aml kernel/firmware/acpi
-$ find kernel | cpio -H newc --create > /boot/initrd_acpi_patched
-$ echo 'GRUB_EARLY_INITRD_LINUX_CUSTOM="initrd_acpi_patched"' > /etc/default/grub.d/acpi-tables.cfg
-$ update-grub
+
+### 2. Appliquer les correctifs manuellement dans `dsdt.dsl`
+
+#### Correctif 1 & 2 — `ELAN0643._DSM` et `ELAN0643._CRS`
+
+Chercher les deux occurrences de :
+```asl
+If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x02))
 ```
 
-**Ce que font ces commandes :**
-- `iasl -sa dsdt.dsl` recompile ton fichier corrigé en binaire (`.aml`)
-- `cpio` crée une petite archive contenant ta table ACPI corrigée
-- On place cette archive dans `/boot` et on configure GRUB (le gestionnaire de démarrage) pour la charger **avant** tout le reste — Linux utilisera alors ta version corrigée à la place de celle du BIOS
+Remplacer chacune par :
+```asl
+//If ((^^^PCI0.LPC0.H_EC.ECRD (RefOf (^^^PCI0.LPC0.H_EC.TPTY)) == 0x02))
+Else
+```
+
+#### Correctif 3 — `I2CD._S0W`
+
+Chercher :
+```asl
+Method (_S0W, ...) { Return (0x04) }
+```
+
+Remplacer par :
+```asl
+// Fix ELAN0643: forcer D0
+Method (_S0W, ...) { Return (0x00) }
+```
+
+#### Correctif 4 — `I2CD._PS3`
+
+Chercher dans `_PS3` l'appel :
+```asl
+DSAD (0x08, 0x03)
+```
+
+Neutraliser :
+```asl
+// Fix ELAN0643: neutralisé
+// DSAD (0x08, 0x03)
+```
+
+### 3. Lancer le script d'installation
+
+```bash
+sudo bash install-dsdt-elan0643.sh
+```
+
+Le script :
+1. Vérifie les correctifs dans `dsdt.dsl`
+2. Recompile le DSDT avec `iasl`
+3. Crée l'archive `/boot/initrd_acpi_patched`
+4. Configure GRUB pour charger le DSDT patché au boot
+5. Installe et active le service systemd `elan0643-touchpad`
+
+### 4. Redémarrer
+
+```bash
+reboot
+```
 
 ---
 
-## Étape 4 — Redémarrer et vérifier
+## Vérification après reboot
 
-Redémarre le laptop :
+```bash
+# Statut du service
+systemctl status elan0643-touchpad.service
 
-```
-$ reboot
-```
+# Logs kernel du driver elan
+dmesg | grep -i elan
 
-Après redémarrage, vérifie que le touchpad est bien reconnu :
-
-```
-$ dmesg | grep -i elan
-$ libinput list-devices
+# Vérifier que le touchpad est bien détecté
+libinput list-devices | grep -A 10 Touchpad
 ```
 
-Si tu vois `ELAN0643` dans les résultats, c'est bon — le touchpad est actif ! 🎉
+**Sortie attendue dans `dmesg` :**
+```
+elan_i2c i2c-X-0015: Elan Touchpad ... initialized
+```
+
+---
+
+## Rollback
+
+```bash
+# Désactiver le service
+sudo systemctl disable elan0643-touchpad.service
+
+# Supprimer la config GRUB et régénérer
+sudo rm /etc/default/grub.d/acpi-tables.cfg
+sudo update-grub
+
+# Supprimer les fichiers installés
+sudo rm /boot/initrd_acpi_patched
+sudo rm /usr/local/lib/elan0643-touchpad-init.sh
+sudo rm /etc/systemd/system/elan0643-touchpad.service
+sudo systemctl daemon-reload
+
+reboot
+```
+
+---
+
+## Fichiers du projet
+
+```
+.
+├── README.md
+├── install-dsdt-elan0643.sh     # Script d'installation principal
+├── dsdt.dsl                     # DSDT patché (à générer, voir instructions)
+└── dsdt_original.dsl            # DSDT original (pour référence / diff)
+```
+
+---
+
+## Pourquoi ce n'est pas dans le kernel upstream ?
+
+Le bug est dans le **firmware BIOS Lenovo**, pas dans le kernel. Le correctif idéal serait une mise à jour BIOS de Lenovo. En attendant, l'override ACPI via initrd est la méthode recommandée par la documentation kernel ([ACPI custom tables](https://www.kernel.org/doc/html/latest/admin-guide/acpi/initrd_table_override.html)).
+
+---
+
+## Matériel testé
+
+| Champ | Valeur |
+|---|---|
+| Machine | Lenovo 14w Gen 2 |
+| Touchpad | ELAN0643 (I2C, `ELAN238E`) |
+| Contrôleur I2C | `AMDI0010:01` (i2c_designware) |
+| Driver touchpad | `elan_i2c` |
+| OS testé | Linux Mint |
+| Adresse I2C | `0x0015` ou `0x002C` selon `TPTY` |
+
+---
+
+## Contribuer
+
+Les PR sont les bienvenues, notamment pour :
+- Tester sur d'autres distributions (Debian, Ubuntu, Fedora…)
+- Adapter à d'autres modèles Lenovo avec le même bug
+- Améliorer la détection automatique des adresses I2C
+
+---
+
+## Licence
+
+MIT
