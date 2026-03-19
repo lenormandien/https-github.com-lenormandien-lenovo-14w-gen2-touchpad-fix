@@ -1,4 +1,4 @@
-# 🖱️ Lenovo 14w Gen 2 — Touchpad Fix (ELAN0643 / I2C)
+# Lenovo 14w Gen 2 — Touchpad Fix (ELAN0643 / I2C)
 
 > Correctif DSDT + service systemd pour faire fonctionner le touchpad ELAN0643 sous Linux (testé sur **Linux Mint**).
 
